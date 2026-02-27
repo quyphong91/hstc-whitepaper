@@ -569,10 +569,9 @@ graph TD
     ABOUT --> A3["Terms of Service"]
     ABOUT --> A4["Developer Info\n/developer"]
 
-    ADMIN --> AD1["Request Dashboard\n/admin"]
-    ADMIN --> AD2["Search Analytics\n/admin/api-analytics"]
-    ADMIN --> AD3["AI Usage Analytics\n/admin/ai-analytics"]
-    ADMIN --> AD4["Manage Articles\n/admin/articles"]
+    ADMIN --> AD1["Search Analytics\n/admin/api-analytics"]
+    ADMIN --> AD2["AI Usage Analytics\n/admin/ai-analytics"]
+    ADMIN --> AD3["Manage Articles\n/admin/articles"]
 
     style HOME fill:#1e2d4a,stroke:#4f8ef7,color:#e2e8f0
     style TOOLS fill:#152530,stroke:#3dd68c,color:#e2e8f0
@@ -605,7 +604,6 @@ graph TD
       </div>
       <div class="sitemap-group">
         <div class="sitemap-group-title">🔒 Admin Area</div>
-        <div class="sitemap-item"><span class="dot"></span>Request Dashboard</div>
         <div class="sitemap-item"><span class="dot"></span>Search Analytics</div>
         <div class="sitemap-item"><span class="dot"></span>AI Analytics</div>
         <div class="sitemap-item"><span class="dot"></span>Article Editor</div>
@@ -897,7 +895,6 @@ graph TD
 
     DB --> ART["📰 Articles\nTitle, content, category,\npublish date, cover image\nWritten by admin, public content"]
     DB --> RUL["⚖️ Official Rulings\nProduct name, classification decision,\nHS code, notification number,\nyear, source document link"]
-    DB --> REQ["📬 User Requests\nProduct description submitted\nby users for manual review\nAdmin assigns final HS code"]
     DB --> LOG["📊 AI Usage Log\nAnonymised IP, product description,\nAI result, processing time\nUsed for rate-limiting + analytics"]
     DB --> ALOG["📈 Search API Logs\nSearch keyword, language,\nnumber of matches, response time\nNo user identity stored"]
     DB --> VEC["🧠 Search Vectors\nHS note text chunks with their\nnumerical 'fingerprints'\nUsed for Smart Search"]
@@ -926,11 +923,6 @@ graph TD
           <td>To understand which products users search for most</td>
         </tr>
         <tr>
-          <td>Manual review requests (hs_requests)</td>
-          <td><span class="badge badge-green">No user identity</span></td>
-          <td>So admin can review and respond to classification questions</td>
-        </tr>
-        <tr>
           <td>Bookmarks</td>
           <td><span class="badge badge-green">Stored on your device only</span></td>
           <td>Saved in your browser — never sent to any server</td>
@@ -952,60 +944,31 @@ graph TD
       <span class="section-tag">Operations</span>
     </div>
     <h2>The Admin Panel — How the Website is Managed</h2>
-    <p class="lead">Behind the public website is a private admin area used to publish content, review user requests, and monitor how the website is being used.</p>
+    <p class="lead">Behind the public website is a private admin area used to publish content and monitor how the website is being used. Users now get instant AI answers directly — no manual review queue is needed.</p>
 
     <div class="diagram-box">
       <div class="diagram-title">Admin Panel Overview</div>
       <div class="mermaid">
 graph LR
     subgraph ADMIN["🔒 Admin Panel (password protected)"]
-        REQ["📬 Request Dashboard\nView all user-submitted\nproduct classification questions\nAssign HS codes + write responses"]
         ART["✏️ Article Manager\nWrite and publish news articles\nUpload cover images\nSet categories and publish dates"]
         STATS["📊 Analytics\nSee what keywords users search\nHow many AI queries per day\nWhich HS codes are most looked up"]
     end
-
-    NOTIF["📱 Telegram Alert\nAdmin gets a notification\non their phone whenever\na new request is submitted"]
-
-    USER(["👤 User submits\na product for review"])
-    USER -->|"New request"| REQ
-    REQ --> NOTIF
-    NOTIF -->|"Admin reviews"| REQ
 
     style ADMIN fill:#251515,stroke:#f7a24f,color:#e2e8f0
       </div>
     </div>
 
-    <h3>The Request Review Process</h3>
-    <div class="flow-steps">
-      <div class="flow-step">
-        <div class="flow-step-line">
-          <div class="flow-step-dot">1</div>
-          <div class="flow-step-connector"></div>
-        </div>
-        <div class="flow-step-content">
-          <h4>User Submits a Request</h4>
-          <p>A user describes their product and asks for help finding the right HS code. The request is saved to the database with status <strong style="color:#f7a24f">Pending</strong>.</p>
-        </div>
+    <div class="card-grid-2">
+      <div class="card">
+        <div class="card-icon">✏️</div>
+        <h4>Article Manager</h4>
+        <p>The admin can write and publish news articles, practical guides, and classification updates. Each article can have a cover image, category tag, and publish date. Articles appear immediately on the public News page once published.</p>
       </div>
-      <div class="flow-step">
-        <div class="flow-step-line">
-          <div class="flow-step-dot">2</div>
-          <div class="flow-step-connector"></div>
-        </div>
-        <div class="flow-step-content">
-          <h4>Admin Gets Notified</h4>
-          <p>A Telegram message is automatically sent to the admin's phone with the request details. Status changes to <strong style="color:#4f8ef7">Processing</strong>.</p>
-        </div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-step-line">
-          <div class="flow-step-dot">3</div>
-          <div class="flow-step-connector"></div>
-        </div>
-        <div class="flow-step-content">
-          <h4>Admin Reviews and Responds</h4>
-          <p>The admin logs into the admin panel, reviews the product details, researches the correct HS code, and writes a response. Status changes to <strong style="color:#3dd68c">Completed</strong>.</p>
-        </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h4>Analytics Dashboard</h4>
+        <p>The admin can see which keywords users search most often, how many AI classification queries are made each day, which HS codes get the most lookups, and how fast the system responds — all without seeing any personal user data.</p>
       </div>
     </div>
   </section>
@@ -1117,14 +1080,12 @@ graph TB
         SB["🗄️ Supabase\n'The database and security guard'\nStores all dynamic data\nHandles admin login\nRuns background tasks"]
         OAI["🤖 OpenAI\n'The AI brain'\nUnderstands language meaning\nClassifies products\nExpands search queries"]
         HAPI["🔎 hstc-api\n'The fast search engine'\nRuns BM25 keyword search\nUsed by the AI pipeline"]
-        TG["📱 Telegram Bot\n'The notification system'\nPings admin on new requests"]
     end
 
     USER --> WEBSITE
     WEBSITE <-->|"Live data"| SB
     SB <-->|"AI tasks"| OAI
     SB <-->|"Search tasks"| HAPI
-    SB -->|"New request alert"| TG
 
     style WEBSITE fill:#151d35,stroke:#4f8ef7,color:#e2e8f0
     style INFRA fill:#151515,stroke:#2e3352,color:#e2e8f0
@@ -1151,11 +1112,6 @@ graph TB
         <div class="card-icon">🔎</div>
         <h4>hstc-api — "The Fast Search Engine"</h4>
         <p>A dedicated search service that the AI pipeline uses to quickly find candidate HS headings. When you run AI Classification, this engine searches through all HS notes in milliseconds to give the AI the best starting candidates.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">📱</div>
-        <h4>Telegram Bot — "The Notification System"</h4>
-        <p>Whenever a user submits a manual classification request, an automatic message is sent to the admin's Telegram. This means no request goes unnoticed, even when the admin isn't actively checking the website.</p>
       </div>
     </div>
 
