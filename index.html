@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HSTC (tracuuhs.com) — How It Works</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3352;
+      --accent: #4f8ef7;
+      --accent2: #7c5af7;
+      --accent3: #3dd68c;
+      --accent4: #f7a24f;
+      --text: #e2e8f0;
+      --muted: #8892a4;
+      --heading: #ffffff;
+      --tag-bg: #1e2d4a;
+      --tag-text: #7dd3fc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── COVER ── */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 32px;
+      background: linear-gradient(135deg, #0f1117 0%, #131a2e 60%, #0d1525 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 30%, rgba(79,142,247,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 80% 70%, rgba(124,90,247,0.10) 0%, transparent 70%);
+    }
+    .cover-badge {
+      display: inline-block;
+      background: rgba(79,142,247,0.15);
+      border: 1px solid rgba(79,142,247,0.4);
+      color: #7dd3fc;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 99px;
+      margin-bottom: 28px;
+      position: relative;
+    }
+    .cover h1 {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .cover h1 span { color: var(--accent); }
+    .cover .subtitle {
+      font-size: 1.15rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+      max-width: 580px;
+      position: relative;
+    }
+    .cover .tagline {
+      font-size: 1rem;
+      color: var(--text);
+      opacity: 0.7;
+      margin-bottom: 40px;
+      max-width: 500px;
+      position: relative;
+    }
+    .cover-meta {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+    }
+    .cover-meta-item { font-size: 0.88rem; color: var(--muted); }
+    .cover-meta-item strong { color: var(--text); }
+
+    /* ── NAV ── */
+    .toc {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .toc-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding: 12px 0;
+      scrollbar-width: none;
+    }
+    .toc-inner::-webkit-scrollbar { display: none; }
+    .toc-inner a {
+      white-space: nowrap;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 5px 12px;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+    .toc-inner a:hover { background: var(--surface2); color: var(--text); }
+
+    /* ── LAYOUT ── */
+    .page { max-width: 1100px; margin: 0 auto; padding: 72px 32px; }
+    .section { margin-bottom: 80px; }
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .section-num {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 99px;
+      letter-spacing: 0.06em;
+    }
+    .section-tag {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    h2 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: var(--heading);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--heading);
+      margin: 32px 0 12px;
+    }
+    p { color: var(--muted); margin-bottom: 14px; }
+    .lead { font-size: 1.05rem; color: var(--text); margin-bottom: 28px; line-height: 1.75; }
+
+    /* ── ANALOGY BOX ── */
+    .analogy {
+      background: rgba(79,142,247,0.07);
+      border: 1px solid rgba(79,142,247,0.25);
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin: 20px 0;
+    }
+    .analogy-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+    .analogy p { color: var(--text); margin: 0; font-size: 0.95rem; }
+
+    /* ── DIAGRAM BOX ── */
+    .diagram-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px 24px;
+      margin: 24px 0;
+      overflow-x: auto;
+    }
+    .diagram-box .mermaid { text-align: center; }
+    .diagram-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .diagram-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── FEATURE CARDS ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .card-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .card-icon { font-size: 1.6rem; margin-bottom: 12px; }
+    .card h4 {
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--heading);
+      margin-bottom: 8px;
+    }
+    .card p { font-size: 0.875rem; margin: 0; line-height: 1.6; }
+
+    /* ── FLOW STEPS ── */
+    .flow-steps { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+    .flow-step { display: flex; gap: 20px; }
+    .flow-step-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .flow-step-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .flow-step-connector {
+      width: 2px;
+      flex: 1;
+      background: var(--border);
+      margin: 4px 0;
+      min-height: 24px;
+    }
+    .flow-step-content { padding-bottom: 28px; flex: 1; }
+    .flow-step-content h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--heading);
+      margin-bottom: 6px;
+      margin-top: 8px;
+    }
+    .flow-step-content p { font-size: 0.9rem; margin: 0; }
+
+    /* ── INFO TABLE ── */
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin: 20px 0;
+    }
+    .info-table th {
+      text-align: left;
+      padding: 10px 16px;
+      background: var(--surface2);
+      color: var(--muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid var(--border);
+    }
+    .info-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: top;
+    }
+    .info-table tr:last-child td { border-bottom: none; }
+    .info-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 5px;
+    }
+    .badge-blue { background: rgba(79,142,247,0.2); color: #7dd3fc; }
+    .badge-green { background: rgba(61,214,140,0.15); color: #3dd68c; }
+    .badge-purple { background: rgba(124,90,247,0.15); color: #a78bfa; }
+    .badge-orange { background: rgba(247,162,79,0.15); color: #f7a24f; }
+
+    /* ── HIGHLIGHT BOX ── */
+    .highlight-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 20px 0;
+    }
+    .highlight-box h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--heading);
+      margin-bottom: 8px;
+    }
+    .highlight-box p { font-size: 0.9rem; margin: 0; }
+
+    /* ── SITEMAP ── */
+    .sitemap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .sitemap-group {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .sitemap-group-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sitemap-item {
+      font-size: 0.85rem;
+      color: var(--text);
+      padding: 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sitemap-item .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* ── DIVIDER ── */
+    hr.section-div { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 36px 32px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ COVER ═══════════════ -->
+<div class="cover">
+  <div class="cover-badge">Product Overview · February 2026</div>
+  <h1>HSTC — <span>tracuuhs.com</span></h1>
+  <p class="subtitle">Vietnam's HS Code Lookup Tool — How It Works</p>
+  <p class="tagline">A plain-language guide to what the website does, how it does it, and why each part matters.</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>Audience</strong> Everyone</div>
+    <div class="cover-meta-item"><strong>Website</strong> tracuuhs.com</div>
+    <div class="cover-meta-item"><strong>Purpose</strong> HS Code Classification for Vietnam</div>
+  </div>
+</div>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav class="toc">
+  <div class="toc-inner">
+    <a href="#what-is-it">What Is It?</a>
+    <a href="#features">Features</a>
+    <a href="#sitemap">Site Map</a>
+    <a href="#how-data">Data Sources</a>
+    <a href="#keyword-search">Keyword Search</a>
+    <a href="#semantic-search">Smart Search</a>
+    <a href="#ai-classify">AI Classification</a>
+    <a href="#storage">Information Stored</a>
+    <a href="#admin">Admin Panel</a>
+    <a href="#access">Who Can Access What</a>
+    <a href="#behind-scenes">Behind the Scenes</a>
+  </div>
+</nav>
+
+<!-- ═══════════════ CONTENT ═══════════════ -->
+<div class="page">
+
+  <!-- ── 1. WHAT IS IT ── -->
+  <section class="section" id="what-is-it">
+    <div class="section-label">
+      <span class="section-num">01</span>
+      <span class="section-tag">Introduction</span>
+    </div>
+    <h2>What Is HSTC?</h2>
+    <p class="lead">HSTC (tracuuhs.com) is a free online tool that helps Vietnamese businesses, customs brokers, and importers/exporters find the correct <strong style="color:#e2e8f0">HS Code</strong> for any product — quickly and accurately.</p>
+
+    <div class="analogy">
+      <div class="analogy-label">💡 What is an HS Code?</div>
+      <p>Every product traded internationally has a unique number called an <strong>HS Code</strong> (Harmonized System Code). Think of it like a product's "tax ID" — it determines how much import duty you pay, whether your goods can be imported, and what paperwork is needed. Getting the wrong code is a costly mistake. HSTC helps you find the right one.</p>
+    </div>
+
+    <div class="diagram-box">
+      <div class="diagram-title">The Problem HSTC Solves</div>
+      <div class="mermaid">
+graph LR
+    PROB("❌ The Problem\nThousands of HS codes exist.\nFinding the right one requires\nreading dense legal documents\nin multiple languages.")
+
+    SOL("✅ HSTC Solution\nSearch in plain Vietnamese or English.\nGet matching HS codes instantly.\nSee the official legal notes\nthat justify the classification.")
+
+    PROB -->|"tracuuhs.com"| SOL
+
+    style PROB fill:#2a1515,stroke:#ef4444,color:#e2e8f0
+    style SOL fill:#152515,stroke:#3dd68c,color:#e2e8f0
+      </div>
+    </div>
+
+    <h3>Who Uses This Website?</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🏭</div>
+        <h4>Importers &amp; Exporters</h4>
+        <p>Businesses that need to declare goods at Vietnamese customs. Finding the right HS code upfront avoids fines and shipment delays.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧾</div>
+        <h4>Customs Brokers</h4>
+        <p>Professionals who file customs declarations on behalf of businesses. They use HSTC to quickly verify classifications.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚖️</div>
+        <h4>Compliance Teams</h4>
+        <p>Legal and finance staff who need to confirm that the HS codes used in declarations are properly supported by official notes.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎓</div>
+        <h4>Students &amp; Researchers</h4>
+        <p>People learning customs classification or researching trade policy who need to understand the HS structure.</p>
+      </div>
+    </div>
+  </section>
+  <hr class="section-div"/>
+
+  <!-- ── 2. FEATURES ── -->
+  <section class="section" id="features">
+    <div class="section-label">
+      <span class="section-num">02</span>
+      <span class="section-tag">What It Can Do</span>
+    </div>
+    <h2>Key Features</h2>
+    <p class="lead">HSTC offers six main tools, each designed to help users at different stages of the classification process.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🔍</div>
+        <h4>Keyword Search</h4>
+        <p>Type a product name or description in Vietnamese or English. The system searches through all official HS descriptions and legal notes to find matches. Works even without perfect spelling — diacritics are handled automatically.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧠</div>
+        <h4>Smart (Semantic) Search</h4>
+        <p>Goes beyond keywords — understands the <em>meaning</em> of what you type. For example, searching "protective headwear for construction" will find "safety helmets" even if those exact words aren't in your query.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🤖</div>
+        <h4>AI Classification</h4>
+        <p>Describe your product in detail and the AI will analyse it step-by-step, applying the official GRI classification rules, and suggest the most likely HS code — with its reasoning clearly explained.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📚</div>
+        <h4>Reference Library</h4>
+        <p>Full access to official HS Explanatory Notes (EN), Supplementary Explanatory Notes (SEN), GRI rules 1–6, WCO Classification Compendium, and the full Vietnamese tariff schedule with MFN import duty rates.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚖️</div>
+        <h4>Official Rulings</h4>
+        <p>A searchable database of real classification decisions issued by Vietnamese Customs (TCHQ notifications). Useful for finding precedents — "how was a similar product classified before?"</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📰</div>
+        <h4>News &amp; Guides</h4>
+        <p>Articles explaining classification updates, regulatory changes, and practical guides written for practitioners — not just lawyers.</p>
+      </div>
+    </div>
+  </section>
+  <hr class="section-div"/>
+
+  <!-- ── 3. SITEMAP ── -->
+  <section class="section" id="sitemap">
+    <div class="section-label">
+      <span class="section-num">03</span>
+      <span class="section-tag">Website Structure</span>
+    </div>
+    <h2>All Pages at a Glance</h2>
+    <p class="lead">The website has 22 pages, organised into five groups.</p>
+
+    <div class="diagram-box">
+      <div class="diagram-title">Site Map</div>
+      <div class="mermaid">
+graph TD
+    HOME["🏠 Home\ntracuuhs.com"]
+
+    HOME --> TOOLS["🔧 Search Tools"]
+    HOME --> REF["📚 Reference Library"]
+    HOME --> NEWS["📰 Content"]
+    HOME --> ABOUT["ℹ️ About"]
+    HOME --> ADMIN["🔒 Admin Area"]
+
+    TOOLS --> T1["Keyword Search\n/tra-cuu-hs-code"]
+    TOOLS --> T2["AI Classification\n/phan-loai-hs-ai"]
+    TOOLS --> T3["Tariff Rates\n/tra-cuu-thue-nhap-khau"]
+    TOOLS --> T4["Bookmarks\n/bookmarks"]
+
+    REF --> R1["GRI Rules 1–6\n/quy-tac-phan-loai-hs"]
+    REF --> R2["HS Explanatory Notes\n/chu-giai-hs"]
+    REF --> R3["Supplementary Notes (SEN)\n/chu-giai-sen"]
+    REF --> R4["WCO Compendium\n/tuyen-tap-phan-loai-wco"]
+    REF --> R5["Custom GPT\n/custom-gpt"]
+    REF --> R6["Public API\n/api"]
+
+    NEWS --> N1["News List\n/tin-tuc"]
+    NEWS --> N2["Article Detail\n/tin-tuc/[article-name]"]
+
+    ABOUT --> A1["About HSTC\n/gioi-thieu"]
+    ABOUT --> A2["Privacy Policy"]
+    ABOUT --> A3["Terms of Service"]
+    ABOUT --> A4["Developer Info\n/developer"]
+
+    ADMIN --> AD1["Request Dashboard\n/admin"]
+    ADMIN --> AD2["Search Analytics\n/admin/api-analytics"]
+    ADMIN --> AD3["AI Usage Analytics\n/admin/ai-analytics"]
+    ADMIN --> AD4["Manage Articles\n/admin/articles"]
+
+    style HOME fill:#1e2d4a,stroke:#4f8ef7,color:#e2e8f0
+    style TOOLS fill:#152530,stroke:#3dd68c,color:#e2e8f0
+    style REF fill:#1a1535,stroke:#7c5af7,color:#e2e8f0
+    style NEWS fill:#251520,stroke:#f7a24f,color:#e2e8f0
+    style ADMIN fill:#2a1515,stroke:#ef4444,color:#e2e8f0
+    style ABOUT fill:#1a2035,stroke:#8892a4,color:#e2e8f0
+      </div>
+    </div>
+
+    <div class="sitemap-grid">
+      <div class="sitemap-group">
+        <div class="sitemap-group-title">🔧 Search Tools</div>
+        <div class="sitemap-item"><span class="dot"></span>Keyword Search</div>
+        <div class="sitemap-item"><span class="dot"></span>AI Classification</div>
+        <div class="sitemap-item"><span class="dot"></span>Tariff Rate Lookup</div>
+        <div class="sitemap-item"><span class="dot"></span>Bookmarks</div>
+      </div>
+      <div class="sitemap-group">
+        <div class="sitemap-group-title">📚 Reference Library</div>
+        <div class="sitemap-item"><span class="dot"></span>GRI Rules 1–6</div>
+        <div class="sitemap-item"><span class="dot"></span>HS Explanatory Notes</div>
+        <div class="sitemap-item"><span class="dot"></span>Supplementary Notes</div>
+        <div class="sitemap-item"><span class="dot"></span>WCO Compendium</div>
+      </div>
+      <div class="sitemap-group">
+        <div class="sitemap-group-title">📰 Content</div>
+        <div class="sitemap-item"><span class="dot"></span>News List</div>
+        <div class="sitemap-item"><span class="dot"></span>Article Pages</div>
+      </div>
+      <div class="sitemap-group">
+        <div class="sitemap-group-title">🔒 Admin Area</div>
+        <div class="sitemap-item"><span class="dot"></span>Request Dashboard</div>
+        <div class="sitemap-item"><span class="dot"></span>Search Analytics</div>
+        <div class="sitemap-item"><span class="dot"></span>AI Analytics</div>
+        <div class="sitemap-item"><span class="dot"></span>Article Editor</div>
+      </div>
+    </div>
+  </section>
+  <hr class="section-div"/>
+
+  <!-- ── 4. DATA SOURCES ── -->
+  <section class="section" id="how-data">
+    <div class="section-label">
+      <span class="section-num">04</span>
+      <span class="section-tag">Behind the Scenes</span>
+    </div>
+    <h2>Where Does the Information Come From?</h2>
+    <p class="lead">All data comes from two places: a large built-in reference library (like an encyclopaedia baked into the website), and a live online database for user-generated content.</p>
+
+    <div class="diagram-box">
+      <div class="diagram-title">Two Types of Data</div>
+      <div class="mermaid">
+graph LR
+    subgraph STATIC["📦 Built-in Reference Library\n(loaded when you open the website)"]
+        A["Full Vietnamese Tariff Schedule\nEvery HS code with description +\nimport duty rates"]
+        B["Official HS Explanatory Notes\nThe legal text that explains\nwhat each code covers"]
+        C["Supplementary Notes (SEN)\nAdditional Vietnamese-specific\nclassification rules"]
+        D["Chapter Names & Structure\nThe 97-chapter framework\nof the HS system"]
+    end
+
+    subgraph LIVE["🌐 Live Online Database\n(updated in real time)"]
+        E["News & Guide Articles\nWritten and published\nby the admin"]
+        F["Official Rulings Database\nReal decisions from\nVietnamese Customs (TCHQ)"]
+        G["AI Usage Logs\nAnonymised records of\nAI classification requests"]
+        H["Vector Search Index\nEmbedded text chunks\nfor Smart Search"]
+    end
+
+    style STATIC fill:#151d35,stroke:#4f8ef7,color:#e2e8f0
+    style LIVE fill:#152515,stroke:#3dd68c,color:#e2e8f0
+      </div>
+    </div>
+
+    <div class="card-grid-2">
+      <div class="card">
+        <div class="card-icon">📦</div>
+        <h4>Built-in Library</h4>
+        <p>Think of this as a massive encyclopaedia that is packaged <em>inside</em> the website itself. It contains the complete Vietnamese tariff schedule (thousands of codes) and all official HS legal notes. Because it's already on your device, searches are <strong style="color:#e2e8f0">instantaneous</strong> — no waiting for a server response.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <h4>Live Database</h4>
+        <p>This is an online database (hosted by Supabase) that stores content that changes over time — news articles, classification rulings, user requests, and AI search indexes. Only this part requires an internet connection to update.</p>
+      </div>
+    </div>
+  </section>
+  <hr class="section-div"/>
+
+  <!-- ── 5. KEYWORD SEARCH ── -->
+  <section class="section" id="keyword-search">
+    <div class="section-label">
+      <span class="section-num">05</span>
+      <span class="section-tag">Core Feature</span>
+    </div>
+    <h2>How Keyword Search Works</h2>
+    <p class="lead">When you type a word or phrase into the search bar, the website runs it through a smart ranking system to find the most relevant HS codes — not just any codes that happen to contain your word.</p>
+
+    <div class="analogy">
+      <div class="analogy-label">💡 Analogy</div>
+      <p>Think of it like Google Search, but specifically for HS codes. Instead of just looking for exact word matches, it weighs how <em>significant</em> a word is. A rare, specific word like "thermostat" counts for much more than a common word like "device".</p>
+    </div>
+
+    <div class="diagram-box">
+      <div class="diagram-title">How a Search Query is Processed — Step by Step</div>
+      <div class="mermaid">
+flowchart TD
+    INPUT(["You type: 'áo choàng tắm'"])
+
+    CLEAN["Step 1 — Clean Up the Text\nRemove accent marks so 'áo' = 'ao'\nConvert to lowercase\nRemove filler words like 'và', 'của', 'the', 'of'"]
+
+    SEARCH["Step 2 — Search All 4 Sources at Once\n① Tariff descriptions (HS codes + names)\n② Explanatory Notes (EN)\n③ Supplementary Notes (SEN)\n④ Official Rulings database"]
+
+    RANK["Step 3 — Score Each Result\nRare words score higher than common words\n(a word appearing in 10 codes matters more than one in 1,000)\nBonus points if the word appears many times in one result\nExtra bonus if your text exactly matches an HS code number"]
+
+    GROUP["Step 4 — Group by Heading\nResults are grouped by 4-digit heading code\ne.g., all results under '6302' are combined\nThe strongest evidence from each group is kept"]
+
+    FILTER["Step 5 — Apply Your Filters\nSection (e.g. Section XI – Textiles)\nChapter (e.g. Chapter 63)\nLanguage: Vietnamese or English\nOnly show results with official note evidence"]
+
+    SHOW(["Results appear instantly\nwith highlighted matching text\nand supporting legal notes"])
+
+    INPUT --> CLEAN --> SEARCH --> RANK --> GROUP --> FILTER --> SHOW
+
+    style INPUT fill:#1a2035,stroke:#4f8ef7,color:#e2e8f0
+    style SHOW fill:#152515,stroke:#3dd68c,color:#e2e8f0
+      </div>
+    </div>
+
+    <h3>Why Does It Handle Vietnamese Spelling Well?</h3>
+    <p>Vietnamese uses accent marks (diacritics) that can be typed many different ways. The search engine automatically strips these marks before comparing — so searching "ao choang tam" and "áo choàng tắm" produce <strong style="color:#e2e8f0">identical results</strong>. No need to worry about typing accents correctly.</p>
+
+    <h3>Search Filters Explained</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🗂️</div>
+        <h4>Section Filter</h4>
+        <p>HS codes are organised into 21 Sections (e.g., Section XI covers Textiles). Use this to narrow your search to a specific industry or product type.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📂</div>
+        <h4>Chapter Filter</h4>
+        <p>Each Section is divided into Chapters. For example, Chapter 63 covers "Other made-up textile articles." Filter by chapter if you already have a general idea.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📋</div>
+        <h4>Has Notes Filter</h4>
+        <p>Show only results that have matching text from the official Explanatory Notes — giving you legal evidence to support the classification.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h4>Exact Match</h4>
+        <p>By default the system shows results that match at least 60% of your words. Turn on "Exact Match" to require <em>all</em> your words to be present.</p>
+      </div>
+    </div>
+  </section>
+  <hr class="section-div"/>
+
+  <!-- ── 6. SEMANTIC SEARCH ── -->
+  <section class="section" id="semantic-search">
+    <div class="section-label">
+      <span class="section-num">06</span>
+      <span class="section-tag">AI-Powered Feature</span>
+    </div>
+    <h2>How Smart (Semantic) Search Works</h2>
+    <p class="lead">Smart Search understands the <em>meaning</em> of your words, not just the words themselves. It can find the right HS code even when you use different vocabulary than what appears in the official documents.</p>
+
+    <div class="analogy">
+      <div class="analogy-label">💡 Analogy</div>
+      <p>Regular keyword search is like a library assistant who only looks for the exact title you say. Smart Search is like an expert librarian who understands that "running shoes" and "athletic footwear" refer to the same category, and finds the right shelf even if you use different words.</p>
+    </div>
+
+    <div class="diagram-box">
+      <div class="diagram-title">Smart Search — How It Works</div>
+      <div class="mermaid">
+sequenceDiagram
+    participant U as You
+    participant W as Website
+    participant AI as AI Service (OpenAI)
+    participant DB as Search Index
+
+    U->>W: Type: "giày chạy bộ"
+
+    W->>AI: "Expand this into a richer description\nincluding synonyms and technical terms"
+    AI-->>W: "Giày thể thao, giày chạy bộ,\nrunning shoes, athletic footwear,\nsports shoes, sneakers..."
+
+    W->>AI: "Convert this expanded description\ninto a mathematical fingerprint (vector)"
+    AI-->>W: A list of 1,536 numbers representing\nthe meaning of the query
+
+    W->>DB: "Find all HS note chunks whose\nfingerprint is closest to mine"
+    DB-->>W: Top 20 closest matches\nwith similarity scores (0–100%)
+
+    W->>W: Remove duplicates\nKeep best match per heading code
+
+    W-->>U: Results ranked by similarity\nShows heading code + matching text\n+ similarity percentage
+      </div>
+    </div>
+
+    <h3>What Is a "Fingerprint" (Vector)?</h3>
+    <div class="highlight-box">
+      <h4>Plain English Explanation</h4>
+      <p>Every piece of text can be converted into a list of numbers — 1,536 of them — that captures its meaning. Texts with similar meanings produce similar numbers. The Smart Search system pre-converts all HS notes into these number lists and stores them. When you search, it converts your query into numbers too, then finds the notes whose numbers are most similar. This is why it understands meaning, not just words.</p>
+    </div>
+  </section>
+  <hr class="section-div"/>
+
+  <!-- ── 7. AI CLASSIFY ── -->
+  <section class="section" id="ai-classify">
+    <div class="section-label">
+      <span class="section-num">07</span>
+      <span class="section-tag">AI-Powered Feature</span>
+    </div>
+    <h2>How AI Classification Works</h2>
+    <p class="lead">The AI Classification feature is the most powerful tool on the site. You describe your product in detail, and the AI walks through the official classification process step by step — just like an expert customs officer would.</p>
+
+    <div class="analogy">
+      <div class="analogy-label">💡 Analogy</div>
+      <p>Think of it as having a senior customs classification expert available 24/7. You describe your product, and the expert: (1) searches through all relevant HS notes, (2) reads the official legal text carefully, (3) compares the most likely codes, and (4) gives you a recommendation with full reasoning — citing the exact paragraphs that support the decision.</p>
+    </div>
+
+    <div class="diagram-box">
+      <div class="diagram-title">AI Classification — The Full Journey</div>
+      <div class="mermaid">
+flowchart TD
+    YOU(["You fill in the form:\n📝 Product name\n📝 Detailed description\n📝 Material (optional)\n📝 Main purpose/use (optional)"])
+
+    LIMIT["Safety Check\nHas this IP address used the\nAI tool more than 5 times today?\nIf yes → friendly message to try tomorrow\nIf no → continue"]
+
+    EXPAND["AI Reads Your Description\nGPT-4o-mini identifies the key\ntechnical terms in both Vietnamese\nand English that customs documents\nwould use for this product"]
+
+    SEARCH["Rapid Search Across All HS Notes\nSearches for each term simultaneously\n(Vietnamese terms first, then English)\nFinds the top 10 most relevant\n4-digit heading codes"]
+
+    READ["Deep-Read the Top 3 Headings\nPulls the full official HS Explanatory\nNotes for the 3 most likely headings\n— the actual legal text that decides\nclassification"]
+
+    THINK["AI Analyses Like an Expert\nFollows the official GRI rules 1–6\nStep 1: Which chapters are relevant?\nStep 2: Which notes include or exclude this product?\nStep 3: Which subheading is the best fit?"]
+
+    RESULT(["AI Delivers Its Answer:\n✅ Recommended HS Code\n📊 Confidence Level (High / Medium / Low)\n📖 Reasoning with cited legal notes\n📎 Links to verify on tracuuhs.com\n⚠️ Reminder to confirm with official customs"])
+
+    YOU --> LIMIT
+    LIMIT -->|"Under limit"| EXPAND
+    LIMIT -->|"Limit reached"| STOP(["Please try again tomorrow"])
+    EXPAND --> SEARCH
+    SEARCH --> READ
+    READ --> THINK
+    THINK --> RESULT
+
+    style YOU fill:#1a2035,stroke:#4f8ef7,color:#e2e8f0
+    style LIMIT fill:#2a1515,stroke:#ef4444,color:#e2e8f0
+    style EXPAND fill:#1a1535,stroke:#7c5af7,color:#e2e8f0
+    style SEARCH fill:#152530,stroke:#3dd68c,color:#e2e8f0
+    style READ fill:#251520,stroke:#f7a24f,color:#e2e8f0
+    style THINK fill:#1a1535,stroke:#7c5af7,color:#e2e8f0
+    style RESULT fill:#152515,stroke:#3dd68c,color:#e2e8f0
+      </div>
+    </div>
+
+    <h3>What Does the AI Output Look Like?</h3>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">1</div>
+          <div class="flow-step-connector"></div>
+        </div>
+        <div class="flow-step-content">
+          <h4>Step 1 — Initial Shortlist</h4>
+          <p>The AI lists 3–5 candidate HS headings it found through its search, and briefly explains why each one might apply based on the official notes.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">2</div>
+          <div class="flow-step-connector"></div>
+        </div>
+        <div class="flow-step-content">
+          <h4>Step 2 — Narrowing Down Using Legal Notes</h4>
+          <p>The AI quotes the actual legal text from the Explanatory Notes — showing which headings are ruled out and which are confirmed based on the official language.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">3</div>
+          <div class="flow-step-connector"></div>
+        </div>
+        <div class="flow-step-content">
+          <h4>Step 3 — Final Subheading Comparison</h4>
+          <p>Compares the 2–3 remaining candidates at the most detailed level (6 or 8 digits) and selects the best fit, citing which GRI rule was applied.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">✓</div>
+        </div>
+        <div class="flow-step-content">
+          <h4>Final Result</h4>
+          <p>A clear recommendation with the HS code, a confidence rating, a one-paragraph explanation, and links to the official notes on tracuuhs.com so you can verify independently.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <h4>⚠️ Important Note About AI Results</h4>
+      <p>The AI classification is a <strong>starting point and reference tool</strong>, not an official determination. Always verify the result with a qualified customs professional or the General Department of Vietnam Customs before making an official declaration. The AI itself includes this reminder in every response.</p>
+    </div>
+
+    <h3>Usage Limits</h3>
+    <p>To keep the service sustainable, each user can make <strong style="color:#e2e8f0">5 AI classification requests per day</strong>. The system tracks this by the user's internet address (IP) — anonymised for privacy. There is no login or registration required.</p>
+  </section>
+  <hr class="section-div"/>
+
+  <!-- ── 8. STORAGE ── -->
+  <section class="section" id="storage">
+    <div class="section-label">
+      <span class="section-num">08</span>
+      <span class="section-tag">Data &amp; Privacy</span>
+    </div>
+    <h2>What Information Is Stored?</h2>
+    <p class="lead">The website stores several types of information in its online database. Here is a plain-language description of what is kept and why.</p>
+
+    <div class="diagram-box">
+      <div class="diagram-title">Information Stored in the Database</div>
+      <div class="mermaid">
+graph TD
+    DB[("🗄️ HSTC Database")]
+
+    DB --> ART["📰 Articles\nTitle, content, category,\npublish date, cover image\nWritten by admin, public content"]
+    DB --> RUL["⚖️ Official Rulings\nProduct name, classification decision,\nHS code, notification number,\nyear, source document link"]
+    DB --> REQ["📬 User Requests\nProduct description submitted\nby users for manual review\nAdmin assigns final HS code"]
+    DB --> LOG["📊 AI Usage Log\nAnonymised IP, product description,\nAI result, processing time\nUsed for rate-limiting + analytics"]
+    DB --> ALOG["📈 Search API Logs\nSearch keyword, language,\nnumber of matches, response time\nNo user identity stored"]
+    DB --> VEC["🧠 Search Vectors\nHS note text chunks with their\nnumerical 'fingerprints'\nUsed for Smart Search"]
+    DB --> USR["🔐 Admin Accounts\nEmail + hashed password\nRole (admin / moderator)\nOnly for admin access"]
+
+    style DB fill:#1a1d27,stroke:#4f8ef7,color:#e2e8f0
+    style LOG fill:#251520,stroke:#f7a24f,color:#e2e8f0
+    style USR fill:#2a1515,stroke:#ef4444,color:#e2e8f0
+      </div>
+    </div>
+
+    <h3>Privacy at a Glance</h3>
+    <table class="info-table">
+      <thead>
+        <tr><th>What is stored</th><th>Is it linked to you personally?</th><th>Why it's stored</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>AI classification request (product description + result)</td>
+          <td><span class="badge badge-orange">Anonymised IP only</span></td>
+          <td>To enforce the 5/day limit and improve the AI tool</td>
+        </tr>
+        <tr>
+          <td>Keyword search logs</td>
+          <td><span class="badge badge-green">No user identity</span></td>
+          <td>To understand which products users search for most</td>
+        </tr>
+        <tr>
+          <td>Manual review requests (hs_requests)</td>
+          <td><span class="badge badge-green">No user identity</span></td>
+          <td>So admin can review and respond to classification questions</td>
+        </tr>
+        <tr>
+          <td>Bookmarks</td>
+          <td><span class="badge badge-green">Stored on your device only</span></td>
+          <td>Saved in your browser — never sent to any server</td>
+        </tr>
+        <tr>
+          <td>Admin accounts</td>
+          <td><span class="badge badge-purple">Admin users only</span></td>
+          <td>Website management — not applicable to regular users</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <hr class="section-div"/>
+
+  <!-- ── 9. ADMIN ── -->
+  <section class="section" id="admin">
+    <div class="section-label">
+      <span class="section-num">09</span>
+      <span class="section-tag">Operations</span>
+    </div>
+    <h2>The Admin Panel — How the Website is Managed</h2>
+    <p class="lead">Behind the public website is a private admin area used to publish content, review user requests, and monitor how the website is being used.</p>
+
+    <div class="diagram-box">
+      <div class="diagram-title">Admin Panel Overview</div>
+      <div class="mermaid">
+graph LR
+    subgraph ADMIN["🔒 Admin Panel (password protected)"]
+        REQ["📬 Request Dashboard\nView all user-submitted\nproduct classification questions\nAssign HS codes + write responses"]
+        ART["✏️ Article Manager\nWrite and publish news articles\nUpload cover images\nSet categories and publish dates"]
+        STATS["📊 Analytics\nSee what keywords users search\nHow many AI queries per day\nWhich HS codes are most looked up"]
+    end
+
+    NOTIF["📱 Telegram Alert\nAdmin gets a notification\non their phone whenever\na new request is submitted"]
+
+    USER(["👤 User submits\na product for review"])
+    USER -->|"New request"| REQ
+    REQ --> NOTIF
+    NOTIF -->|"Admin reviews"| REQ
+
+    style ADMIN fill:#251515,stroke:#f7a24f,color:#e2e8f0
+      </div>
+    </div>
+
+    <h3>The Request Review Process</h3>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">1</div>
+          <div class="flow-step-connector"></div>
+        </div>
+        <div class="flow-step-content">
+          <h4>User Submits a Request</h4>
+          <p>A user describes their product and asks for help finding the right HS code. The request is saved to the database with status <strong style="color:#f7a24f">Pending</strong>.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">2</div>
+          <div class="flow-step-connector"></div>
+        </div>
+        <div class="flow-step-content">
+          <h4>Admin Gets Notified</h4>
+          <p>A Telegram message is automatically sent to the admin's phone with the request details. Status changes to <strong style="color:#4f8ef7">Processing</strong>.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">3</div>
+          <div class="flow-step-connector"></div>
+        </div>
+        <div class="flow-step-content">
+          <h4>Admin Reviews and Responds</h4>
+          <p>The admin logs into the admin panel, reviews the product details, researches the correct HS code, and writes a response. Status changes to <strong style="color:#3dd68c">Completed</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <hr class="section-div"/>
+
+  <!-- ── 10. ACCESS ── -->
+  <section class="section" id="access">
+    <div class="section-label">
+      <span class="section-num">10</span>
+      <span class="section-tag">Access Control</span>
+    </div>
+    <h2>Who Can Access What?</h2>
+    <p class="lead">The website has three types of users, each with a different level of access.</p>
+
+    <div class="diagram-box">
+      <div class="diagram-title">Access Levels</div>
+      <div class="mermaid">
+graph TD
+    subgraph PUBLIC["🌐 Public User (no login needed)"]
+        P1["✅ Keyword Search"]
+        P2["✅ Smart Search"]
+        P3["✅ AI Classification (5/day)"]
+        P4["✅ All Reference Pages"]
+        P5["✅ News Articles"]
+        P6["✅ Official Rulings"]
+        P7["✅ Tariff Rates"]
+        P8["✅ Bookmarks (browser only)"]
+    end
+
+    subgraph ADMIN_U["🔐 Admin (login required)"]
+        A1["✅ Everything above"]
+        A2["✅ View all user requests"]
+        A3["✅ Assign HS codes to requests"]
+        A4["✅ Write + publish articles"]
+        A5["✅ See search analytics"]
+        A6["✅ See AI usage analytics"]
+    end
+
+    style PUBLIC fill:#152515,stroke:#3dd68c,color:#e2e8f0
+    style ADMIN_U fill:#251515,stroke:#f7a24f,color:#e2e8f0
+      </div>
+    </div>
+
+    <h3>How Admin Login Works</h3>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">1</div>
+          <div class="flow-step-connector"></div>
+        </div>
+        <div class="flow-step-content">
+          <h4>Admin Visits /admin/login</h4>
+          <p>Enters their email and password. The password is never stored in plain text — only a secure hash is kept.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">2</div>
+          <div class="flow-step-connector"></div>
+        </div>
+        <div class="flow-step-content">
+          <h4>Identity is Verified</h4>
+          <p>Supabase Auth checks the credentials and issues a secure session token (like a temporary digital ID card) that is stored in the browser.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">3</div>
+          <div class="flow-step-connector"></div>
+        </div>
+        <div class="flow-step-content">
+          <h4>Role is Checked</h4>
+          <p>The website looks up the user's role in the database (admin / moderator / user). Only "admin" accounts can access the admin panel.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">✓</div>
+        </div>
+        <div class="flow-step-content">
+          <h4>Admin Panel Unlocked</h4>
+          <p>The session stays active across page refreshes and even if you close and reopen the browser tab — until the admin explicitly logs out.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <hr class="section-div"/>
+
+  <!-- ── 11. BEHIND SCENES ── -->
+  <section class="section" id="behind-scenes">
+    <div class="section-label">
+      <span class="section-num">11</span>
+      <span class="section-tag">Infrastructure</span>
+    </div>
+    <h2>Behind the Scenes — What Keeps It Running</h2>
+    <p class="lead">Several services work together invisibly to deliver a fast and reliable experience. Here's a non-technical look at each one.</p>
+
+    <div class="diagram-box">
+      <div class="diagram-title">All the Pieces Working Together</div>
+      <div class="mermaid">
+graph TB
+    USER(["👤 You open tracuuhs.com"])
+
+    subgraph WEBSITE["The Website (your browser)"]
+        UI["Everything you see and click\nButtons, search box, results,\narticles, filters"]
+    end
+
+    subgraph INFRA["Services that power the website"]
+        SB["🗄️ Supabase\n'The database and security guard'\nStores all dynamic data\nHandles admin login\nRuns background tasks"]
+        OAI["🤖 OpenAI\n'The AI brain'\nUnderstands language meaning\nClassifies products\nExpands search queries"]
+        HAPI["🔎 hstc-api\n'The fast search engine'\nRuns BM25 keyword search\nUsed by the AI pipeline"]
+        TG["📱 Telegram Bot\n'The notification system'\nPings admin on new requests"]
+    end
+
+    USER --> WEBSITE
+    WEBSITE <-->|"Live data"| SB
+    SB <-->|"AI tasks"| OAI
+    SB <-->|"Search tasks"| HAPI
+    SB -->|"New request alert"| TG
+
+    style WEBSITE fill:#151d35,stroke:#4f8ef7,color:#e2e8f0
+    style INFRA fill:#151515,stroke:#2e3352,color:#e2e8f0
+    style SB fill:#152515,stroke:#3dd68c,color:#e2e8f0
+    style OAI fill:#1a1535,stroke:#7c5af7,color:#e2e8f0
+    style HAPI fill:#251520,stroke:#f7a24f,color:#e2e8f0
+    style TG fill:#1a2530,stroke:#4f8ef7,color:#e2e8f0
+      </div>
+    </div>
+
+    <h3>Each Service Explained Simply</h3>
+    <div class="card-grid-2">
+      <div class="card">
+        <div class="card-icon">🗄️</div>
+        <h4>Supabase — "The Database &amp; Security Guard"</h4>
+        <p>Supabase is the backbone. It stores all the live data (articles, requests, logs), handles admin login securely, and runs the "background tasks" (called Edge Functions) that power AI features. Think of it as the building that houses everything.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🤖</div>
+        <h4>OpenAI — "The AI Brain"</h4>
+        <p>When you use Smart Search or AI Classification, the website calls OpenAI's services. One model (GPT-4o-mini) understands language and generates text. Another (text-embedding-3-small) converts text into the numerical fingerprints used by Smart Search.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔎</div>
+        <h4>hstc-api — "The Fast Search Engine"</h4>
+        <p>A dedicated search service that the AI pipeline uses to quickly find candidate HS headings. When you run AI Classification, this engine searches through all HS notes in milliseconds to give the AI the best starting candidates.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📱</div>
+        <h4>Telegram Bot — "The Notification System"</h4>
+        <p>Whenever a user submits a manual classification request, an automatic message is sent to the admin's Telegram. This means no request goes unnoticed, even when the admin isn't actively checking the website.</p>
+      </div>
+    </div>
+
+    <h3>Why Is the Website Fast?</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h4>Search Is Instant</h4>
+        <p>The entire HS code library is loaded into your browser when you first visit. Keyword searches don't need to contact a server — they run directly on your device in milliseconds.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📦</div>
+        <h4>Only Load What You Need</h4>
+        <p>Pages you haven't visited yet aren't downloaded until you actually click on them. This keeps the initial load fast.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌍</div>
+        <h4>Edge Computing</h4>
+        <p>AI tasks run on servers located close to the user geographically — reducing the time data needs to travel through the internet.</p>
+      </div>
+    </div>
+
+    <h3>Future Roadmap</h3>
+    <div class="highlight-box">
+      <h4>🚀 What's Coming Next</h4>
+      <p>The platform is designed to continuously improve. Planned enhancements include expanded semantic search coverage, improved AI accuracy through better retrieval context, richer ruling databases, and a more personalised experience for returning users. The collaboration between the owner and AI (Claude) allows rapid, iterative development.</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p style="font-size:1rem;font-weight:600;color:#e2e8f0;margin-bottom:8px;">HSTC — tracuuhs.com</p>
+  <p>Vietnam's HS Code Lookup Platform &nbsp;·&nbsp; Product Overview &nbsp;·&nbsp; February 2026</p>
+  <p style="margin-top:8px;">
+    <a href="https://tracuuhs.com">tracuuhs.com</a>
+  </p>
+</footer>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      background: '#1a1d27',
+      primaryColor: '#1e2d4a',
+      primaryTextColor: '#e2e8f0',
+      primaryBorderColor: '#4f8ef7',
+      lineColor: '#4f8ef7',
+      secondaryColor: '#22263a',
+      tertiaryColor: '#251535',
+      edgeLabelBackground: '#1a1d27',
+      fontFamily: 'Segoe UI, system-ui, sans-serif',
+      fontSize: '13px',
+    },
+    flowchart: { curve: 'basis', padding: 20 },
+    sequence: { mirrorActors: false },
+  });
+</script>
+</body>
+</html>
