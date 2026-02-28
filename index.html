@@ -422,6 +422,7 @@
     <a href="#storage">Information Stored</a>
     <a href="#access">Who Can Access What</a>
     <a href="#behind-scenes">Behind the Scenes</a>
+    <a href="#hstc-api">hstc-api</a>
   </div>
 </nav>
 
@@ -1136,6 +1137,160 @@ graph TB
       </div>
     </div>
 
+  </section>
+  <hr class="section-div"/>
+
+  <!-- ── 11. HSTC-API ── -->
+  <section class="section" id="hstc-api">
+    <div class="section-label">
+      <span class="section-num">11</span>
+      <span class="section-tag">Search Infrastructure</span>
+    </div>
+    <h2>hstc-api — The Search Engine Behind the Scenes</h2>
+    <p class="lead">While most of what users see on tracuuhs.com is the website itself, there is a separate, dedicated search service running in the background called <strong style="color:#e2e8f0">hstc-api</strong>. It is the engine that powers fast, accurate text search across all HS notes — and it is the backbone of the AI classification pipeline.</p>
+
+    <div class="analogy">
+      <div class="analogy-label">💡 Analogy</div>
+      <p>Think of the website as a restaurant and hstc-api as the kitchen. Customers (users and the AI) place orders — search queries — and the kitchen handles all the hard work of finding and ranking the right ingredients (HS notes) before sending back a result. The restaurant doesn't need to know how the kitchen works, only that it returns the right dish quickly.</p>
+    </div>
+
+    <div class="diagram-box">
+      <div class="diagram-title">Where hstc-api Sits in the System</div>
+      <div class="mermaid">
+graph TB
+    subgraph CALLERS["Who calls hstc-api"]
+        AI_PIPE["🤖 AI Classification Pipeline\nSupabase Edge Function\ncalls hstc-api to find\ncandidate HS headings"]
+        PUB_API["🌐 Public API Users\nDevelopers or power users\nquerying HS notes directly\nvia the /api page"]
+    end
+
+    HAPI["🔎 hstc-api\nDedicated search service\nAlways on, always fast"]
+
+    subgraph WHAT_IT_SEARCHES["What hstc-api searches"]
+        EN["📖 HS Explanatory Notes\nFull legal text for\nevery HS heading"]
+        SEN["📋 Supplementary Notes\nVietnamese-specific\nclassification rules"]
+        TAR["📊 Tariff Descriptions\nEvery HS code name\nin Vietnamese"]
+    end
+
+    AI_PIPE -->|"POST /search\n{query, lang, limit}"| HAPI
+    PUB_API -->|"GET /search\n?q=keyword"| HAPI
+    HAPI --> EN
+    HAPI --> SEN
+    HAPI --> TAR
+    HAPI -->|"Returns: ranked results\n+ matched text snippets\n+ relevance scores"| CALLERS
+
+    style HAPI fill:#251520,stroke:#f7a24f,color:#e2e8f0
+    style CALLERS fill:#151d35,stroke:#4f8ef7,color:#e2e8f0
+    style WHAT_IT_SEARCHES fill:#152515,stroke:#3dd68c,color:#e2e8f0
+      </div>
+    </div>
+
+    <h3>Why Does It Exist as a Separate Service?</h3>
+    <div class="card-grid-2">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h4>Speed for the AI Pipeline</h4>
+        <p>When you submit an AI classification request, the system needs to search through thousands of HS note paragraphs in milliseconds to find the most relevant ones for the AI to read. A dedicated, always-warm search service is much faster than running this search ad-hoc inside the AI function itself.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔌</div>
+        <h4>Reusable by Multiple Callers</h4>
+        <p>Both the AI classification pipeline and the public developer API need the same underlying search capability. Having it as a standalone service means both callers get the same fast, consistent results without duplicating logic.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔧</div>
+        <h4>Independent Improvements</h4>
+        <p>The search algorithm can be improved, reindexed, or scaled without touching the main website code. When new HS chapters are added or scoring logic is tuned, only hstc-api needs to be updated — the website and AI pipeline automatically benefit.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📏</div>
+        <h4>Controlled Result Size</h4>
+        <p>The AI can only read a limited amount of text per request. hstc-api is designed to return precisely the right number of results — concise enough for the AI to process, but comprehensive enough to cover all serious candidate headings.</p>
+      </div>
+    </div>
+
+    <h3>How a Search Request Flows Through hstc-api</h3>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">1</div>
+          <div class="flow-step-connector"></div>
+        </div>
+        <div class="flow-step-content">
+          <h4>Query Arrives</h4>
+          <p>A search query arrives — either from the AI classification pipeline (e.g. "lightweight thermal insulation panel") or from a developer using the public API. The caller can specify language (Vietnamese or English) and how many results to return.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">2</div>
+          <div class="flow-step-connector"></div>
+        </div>
+        <div class="flow-step-content">
+          <h4>Text is Normalised</h4>
+          <p>Accent marks are stripped, text is lowercased, and common stop-words are removed. This ensures "vải dệt thoi" and "vai det thoi" produce identical matches — important for Vietnamese queries where diacritics vary by typing method.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">3</div>
+          <div class="flow-step-connector"></div>
+        </div>
+        <div class="flow-step-content">
+          <h4>BM25 Scoring Across All Notes</h4>
+          <p>Every paragraph in the HS Explanatory Notes, Supplementary Notes, and tariff descriptions is scored against the query. Rare, specific words score higher than common ones. A paragraph containing the query term five times scores higher than one that mentions it once.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">4</div>
+          <div class="flow-step-connector"></div>
+        </div>
+        <div class="flow-step-content">
+          <h4>Results Grouped by Heading</h4>
+          <p>Multiple matching paragraphs from the same 4-digit heading are consolidated into a single result. The best-scoring paragraph becomes the "lead evidence" snippet — what gets shown to the user or fed to the AI as context.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-line">
+          <div class="flow-step-dot">✓</div>
+        </div>
+        <div class="flow-step-content">
+          <h4>Ranked List Returned</h4>
+          <p>The API returns a JSON list of heading codes sorted by relevance score, each with its matched text snippet and score. The AI classification pipeline uses the top results as context for its analysis. Public API users receive the same structured response.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>The Public API — hstc-api for Everyone</h3>
+    <p>hstc-api is not just an internal tool. The <strong style="color:#e2e8f0">/api page</strong> on tracuuhs.com documents a public endpoint that developers, data analysts, and power users can call directly. This makes it possible to:</p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🛠️</div>
+        <h4>Build Custom Tools</h4>
+        <p>Developers can integrate HS code search into their own ERP systems, customs software, or internal tools — without scraping the website or maintaining their own HS database.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h4>Bulk Classification Research</h4>
+        <p>Analysts can query a list of product names programmatically and get ranked HS heading candidates for each — far faster than searching one by one through the website.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔗</div>
+        <h4>Integrate into Workflows</h4>
+        <p>Import/export teams can connect hstc-api to spreadsheets, automation tools, or procurement systems to surface HS classification suggestions directly in existing workflows.</p>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <h4>hstc-api at a Glance</h4>
+      <p>
+        <strong style="color:#e2e8f0">What it searches:</strong> HS Explanatory Notes (EN), Supplementary Notes (SEN), Tariff descriptions<br>
+        <strong style="color:#e2e8f0">Scoring method:</strong> BM25 — the same algorithm used by search engines like Elasticsearch<br>
+        <strong style="color:#e2e8f0">Languages supported:</strong> Vietnamese and English<br>
+        <strong style="color:#e2e8f0">Who uses it:</strong> AI classification pipeline + public API callers<br>
+        <strong style="color:#e2e8f0">Documentation:</strong> Available at tracuuhs.com/api
+      </p>
+    </div>
   </section>
 
 </div>
