@@ -766,32 +766,32 @@ sequenceDiagram
 flowchart LR
     A([📦 New Product\nor Import/Export\nDeclaration]) --> B
 
-    B[1️⃣ Keyword Search\nType product name\nin Vietnamese] --> C{Results\nClear?}
+    B[Step 1: Keyword Search\nType product name\nin Vietnamese] --> C{Results\nClear?}
 
-    C -->|Yes| E[3️⃣ Review Evidence\nRead Explanatory\nNotes snippets]
-    C -->|No — vague product| D[2️⃣ AI Classification\nEnter full description\n+ material + use]
+    C -->|Yes| E[Review Evidence\nRead Explanatory\nNotes snippets]
+    C -->|No - vague product| D[AI Classification\nEnter full description\nand material]
 
     D --> E
 
     E --> F{Check\nRulings}
-    F -->|Ruling exists| G[4️⃣ Apply Ruling\nBinding CHQ\ndecision]
-    F -->|No ruling| H[4️⃣ Read Full\nExplanatory Notes\nfor the heading]
+    F -->|Ruling exists| G[Apply Ruling\nBinding CHQ\ndecision]
+    F -->|No ruling| H[Read Full\nExplanatory Notes\nfor the heading]
 
-    G --> I[✅ Final Code\nSelected with\nevidence trail]
+    G --> I[Final Code\nSelected with\nevidence trail]
     H --> I
 
-    I --> J([📝 Declaration\nFiled with\ndefensible basis])
+    I --> J([Declaration\nFiled with\ndefensible basis])
 
-    classDef start fill:#1f4068,stroke:#58a6ff,color:#e6edf3
+    classDef startNode fill:#1f4068,stroke:#58a6ff,color:#e6edf3
     classDef step fill:#1f2937,stroke:#30363d,color:#e6edf3
     classDef decision fill:#2d1f47,stroke:#d2a8ff,color:#e6edf3
     classDef ai fill:#2d1f47,stroke:#d2a8ff,color:#d2a8ff
-    classDef end fill:#0d3320,stroke:#3fb950,color:#3fb950
-    class A,J start
+    classDef finalNode fill:#0d3320,stroke:#3fb950,color:#3fb950
+    class A,J startNode
     class B,E,G,H step
     class C,F decision
     class D ai
-    class I end
+    class I finalNode
       </div>
     </div>
 
