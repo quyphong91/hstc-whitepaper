@@ -761,32 +761,38 @@ sequenceDiagram
       <p>A typical classification workflow — from initial question to final code selection with documented evidence.</p>
     </div>
 
-    <div class="diagram-wrap">
-      <div class="mermaid">
-flowchart LR
-    A([📦 New Product\nor Import/Export\nDeclaration]) --> B
+    <div class="diagram-wrap" style="overflow-x:auto">
+      <div class="mermaid" style="min-width:600px">
+%%{init: {'theme':'dark','themeVariables':{'fontSize':'16px','fontFamily':'system-ui,sans-serif'},'flowchart':{'nodeSpacing':50,'rankSpacing':60,'curve':'basis'}}}%%
+flowchart TD
+    A([New Product\nor Import / Export Declaration])
 
-    B[Step 1: Keyword Search\nType product name\nin Vietnamese] --> C{Results\nClear?}
+    A --> B[STEP 1 — Keyword Search\nType product name in Vietnamese or English]
 
-    C -->|Yes| E[Review Evidence\nRead Explanatory\nNotes snippets]
-    C -->|No - vague product| D[AI Classification\nEnter full description\nand material]
+    B --> C{Are the results\nclear and relevant?}
 
-    D --> E
+    C -->|Yes — clear match found| E
+    C -->|No — complex or unfamiliar product| D
 
-    E --> F{Check\nRulings}
-    F -->|Ruling exists| G[Apply Ruling\nBinding CHQ\ndecision]
-    F -->|No ruling| H[Read Full\nExplanatory Notes\nfor the heading]
+    D[STEP 2 — AI Classification\nEnter full description, material and intended use\nReceive ranked HS candidates with cited legal reasoning]
 
-    G --> I[Final Code\nSelected with\nevidence trail]
+    D --> E[STEP 3 — Review Evidence\nRead matched Explanatory Note excerpts\nand official ruling snippets cited in results]
+
+    E --> F{Does an official\nCHQ Ruling exist\nfor this product?}
+
+    F -->|Ruling found — binding decision| G[STEP 4a — Apply the CHQ Ruling\nThe official classification ruling\ntakes precedence and is binding]
+    F -->|No ruling — professional judgment required| H[STEP 4b — Study Full Explanatory Notes\nRead complete heading scope and\ninclusion / exclusion criteria]
+
+    G --> I[Final HS Code Confirmed\nClassification supported by\ndocumented legal evidence]
     H --> I
 
-    I --> J([Declaration\nFiled with\ndefensible basis])
+    I --> J([Declaration Filed\nClassification is defensible\nand audit-ready])
 
-    classDef startNode fill:#1f4068,stroke:#58a6ff,color:#e6edf3
-    classDef step fill:#1f2937,stroke:#30363d,color:#e6edf3
-    classDef decision fill:#2d1f47,stroke:#d2a8ff,color:#e6edf3
-    classDef ai fill:#2d1f47,stroke:#d2a8ff,color:#d2a8ff
-    classDef finalNode fill:#0d3320,stroke:#3fb950,color:#3fb950
+    classDef startNode fill:#1f4068,stroke:#58a6ff,stroke-width:2px,color:#e6edf3
+    classDef step fill:#1c2431,stroke:#58a6ff,stroke-width:1px,color:#e6edf3
+    classDef decision fill:#2d1f47,stroke:#d2a8ff,stroke-width:2px,color:#e6edf3
+    classDef ai fill:#2d1f47,stroke:#d2a8ff,stroke-width:2px,color:#d2a8ff
+    classDef finalNode fill:#0d3320,stroke:#3fb950,stroke-width:2px,color:#3fb950
     class A,J startNode
     class B,E,G,H step
     class C,F decision
