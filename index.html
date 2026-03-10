@@ -4,483 +4,648 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HSTC Platform — Product Documentation &amp; Business Case</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
+    /* ─── DESIGN SYSTEM: Intelligence Dossier ───────────────────────── */
     :root {
-      --bg:      #0d1117;
-      --bg2:     #161b22;
-      --bg3:     #1c2431;
-      --bg4:     #21262d;
-      --border:  #30363d;
-      --text:    #e6edf3;
-      --muted:   #8b949e;
-      --blue:    #58a6ff;
-      --blue-d:  #1f4068;
-      --green:   #3fb950;
-      --green-d: #0d3320;
-      --orange:  #f0883e;
-      --orange-d:#3a1f00;
-      --purple:  #d2a8ff;
-      --purple-d:#2d1f47;
-      --yellow:  #e3b341;
-      --red:     #f85149;
-      --teal:    #39d353;
+      --ink:          #07111f;
+      --ink-2:        #0d1a2e;
+      --ink-3:        #122038;
+      --ink-4:        #192845;
+      --rule:         #1e3456;
+      --text:         #dde6f0;
+      --muted:        #6b8099;
+      --dim:          #3d566e;
+
+      --teal:         #00d4aa;
+      --teal-dim:     rgba(0,212,170,.1);
+      --teal-border:  rgba(0,212,170,.22);
+      --teal-glow:    0 0 24px rgba(0,212,170,.15);
+
+      --gold:         #e8a020;
+      --gold-dim:     rgba(232,160,32,.1);
+      --gold-border:  rgba(232,160,32,.25);
+
+      --indigo:       #818cf8;
+      --indigo-dim:   rgba(129,140,248,.1);
+      --indigo-border:rgba(129,140,248,.25);
+
+      --crimson:      #e05252;
+      --crimson-dim:  rgba(224,82,82,.07);
+      --crimson-border:rgba(224,82,82,.2);
+
+      --green:        #34d399;
+      --green-dim:    rgba(52,211,153,.1);
+
+      --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+      --font-body:    'IBM Plex Sans', system-ui, sans-serif;
+      --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
-      background: var(--bg);
+      font-family: var(--font-body);
+      background: var(--ink);
       color: var(--text);
-      line-height: 1.7;
+      line-height: 1.75;
       font-size: 16px;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
     }
+
+    /* ─── SCROLL REVEAL ──────────────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: .1s; }
+    .reveal-delay-2 { transition-delay: .2s; }
+    .reveal-delay-3 { transition-delay: .3s; }
+    .reveal-delay-4 { transition-delay: .4s; }
 
     /* ─── NAVIGATION ─────────────────────────────────────────────────── */
     nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(13,17,23,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-      display: flex; align-items: center; gap: 0.5rem;
-      height: 52px; overflow-x: auto;
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(7,17,31,.88);
+      backdrop-filter: blur(14px) saturate(150%);
+      border-bottom: 1px solid var(--rule);
+      padding: 0 2.5rem;
+      display: flex; align-items: center; gap: 0.25rem;
+      height: 50px; overflow-x: auto;
     }
+    nav::-webkit-scrollbar { display: none; }
+    .nav-logo {
+      font-family: var(--font-mono);
+      font-weight: 500; font-size: 0.85rem;
+      color: var(--teal); margin-right: 1.5rem;
+      flex-shrink: 0; letter-spacing: .04em;
+    }
+    .nav-logo span { color: var(--muted); }
     nav a {
+      font-family: var(--font-mono);
       color: var(--muted); text-decoration: none;
-      font-size: 0.8rem; font-weight: 500;
-      padding: 0.3rem 0.7rem; border-radius: 6px;
-      white-space: nowrap; transition: all .2s;
+      font-size: 0.72rem; font-weight: 400;
+      padding: 0.25rem 0.65rem;
+      white-space: nowrap; transition: color .2s;
+      letter-spacing: .02em;
     }
-    nav a:hover { color: var(--text); background: var(--bg4); }
-    nav .logo {
-      font-weight: 700; font-size: 1rem;
-      color: var(--blue); margin-right: 1rem;
-      flex-shrink: 0;
+    nav a:hover { color: var(--teal); }
+    .nav-live {
+      margin-left: auto; flex-shrink: 0;
+      display: flex; align-items: center; gap: 0.5rem;
+      font-family: var(--font-mono); font-size: 0.68rem;
+      color: var(--green);
     }
+    .live-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      animation: livepulse 2.5s ease infinite;
+    }
+    @keyframes livepulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(0.7)} }
 
     /* ─── LAYOUT ─────────────────────────────────────────────────────── */
-    .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
-    section { padding: 5rem 0; border-bottom: 1px solid var(--border); }
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 2.5rem; }
+
+    /* Section counter for watermarks */
+    body { counter-reset: sec; }
+    section:not(#hero):not(#summary) { counter-increment: sec; }
+
+    section {
+      padding: 6rem 0;
+      border-bottom: 1px solid var(--rule);
+      position: relative;
+      overflow: hidden;
+    }
     section:last-child { border-bottom: none; }
+
+    /* Giant watermark number behind section heading */
+    section:not(#hero):not(#summary) .section-header::before {
+      content: counter(sec, decimal-leading-zero);
+      position: absolute;
+      top: -0.3em; left: -0.05em;
+      font-family: var(--font-display);
+      font-size: clamp(6rem, 14vw, 11rem);
+      font-weight: 900;
+      color: var(--teal);
+      opacity: 0.04;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -0.04em;
+    }
 
     /* ─── TYPOGRAPHY ─────────────────────────────────────────────────── */
     .section-label {
-      font-size: 0.72rem; font-weight: 600; letter-spacing: .12em;
-      text-transform: uppercase; color: var(--blue);
-      margin-bottom: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem; font-weight: 500;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 0.8rem;
     }
-    h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.15; }
-    h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 700; line-height: 1.25; }
-    h3 { font-size: 1.15rem; font-weight: 700; }
-    h4 { font-size: 0.95rem; font-weight: 600; }
-    p { color: var(--muted); max-width: 70ch; }
-    strong { color: var(--text); }
+
+    h1, h2 { font-family: var(--font-display); line-height: 1.12; }
+    h1 { font-size: clamp(2.4rem, 5.5vw, 4rem); font-weight: 700; color: #fff; }
+    h2 {
+      font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+      font-weight: 700; color: #fff;
+      position: relative;
+    }
+    /* Teal underline accent on h2 */
+    h2::after {
+      content: '';
+      display: block;
+      width: 2.5rem; height: 3px;
+      background: var(--teal);
+      margin-top: 0.75rem;
+      border-radius: 2px;
+    }
+    h3 {
+      font-size: 1.05rem; font-weight: 600;
+      color: var(--text); letter-spacing: .01em;
+    }
+    h4 { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+
+    p { color: var(--muted); max-width: 68ch; }
+    strong { color: var(--text); font-weight: 500; }
+    em { color: var(--teal); font-style: normal; }
+
+    .section-header { margin-bottom: 3rem; position: relative; }
+    .section-header p { margin-top: 1rem; font-size: 1rem; }
+
+    /* ─── TEAL RULE DIVIDER ──────────────────────────────────────────── */
+    .rule {
+      height: 1px;
+      background: linear-gradient(90deg, var(--teal) 0%, transparent 60%);
+      margin: 3rem 0; opacity: 0.35;
+    }
 
     /* ─── HERO ───────────────────────────────────────────────────────── */
     #hero {
-      padding: 7rem 0 5rem;
-      background: radial-gradient(ellipse 70% 60% at 50% -10%, rgba(88,166,255,0.12) 0%, transparent 70%);
+      padding: 8rem 0 6rem;
+      border-bottom: 1px solid var(--rule);
+      position: relative;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -5%, rgba(0,212,170,.07) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 40% at 85% 80%, rgba(129,140,248,.05) 0%, transparent 60%),
+        var(--ink);
     }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      background: var(--blue-d); border: 1px solid rgba(88,166,255,0.3);
-      border-radius: 20px; padding: 0.3rem 0.9rem;
-      font-size: 0.78rem; font-weight: 600; color: var(--blue);
-      margin-bottom: 1.5rem;
+    /* Grain texture */
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none; opacity: 0.6;
     }
-    .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-
-    .hero-subtitle { font-size: clamp(1rem, 2vw, 1.2rem); color: var(--muted); margin: 1.25rem 0 2.5rem; max-width: 55ch; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      font-family: var(--font-mono); font-size: 0.72rem; font-weight: 500;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 1.75rem;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block;
+      width: 28px; height: 1px; background: var(--teal);
+    }
+    .hero-tagline {
+      font-family: var(--font-body);
+      font-size: clamp(1rem, 1.8vw, 1.15rem);
+      font-weight: 300; color: var(--muted);
+      margin: 1.5rem 0 3.5rem;
+      max-width: 52ch; line-height: 1.8;
+    }
+    .hero-tagline strong { color: var(--text); font-weight: 500; }
 
     .hero-stats {
-      display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 3rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      overflow: hidden;
+      max-width: 700px;
     }
     .hero-stat {
-      display: flex; flex-direction: column;
-      border-left: 3px solid var(--blue); padding-left: 1rem;
+      padding: 1.2rem 1.4rem;
+      border-right: 1px solid var(--rule);
+      position: relative;
     }
-    .hero-stat .num { font-size: 1.6rem; font-weight: 800; color: var(--text); line-height: 1; }
-    .hero-stat .lbl { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+    .hero-stat:last-child { border-right: none; }
+    .hero-stat::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: var(--teal); opacity: 0;
+      transition: opacity .3s;
+    }
+    .hero-stat:hover::before { opacity: 1; }
+    .stat-num {
+      font-family: var(--font-mono);
+      font-size: 1.55rem; font-weight: 500;
+      color: #fff; line-height: 1;
+      display: block;
+    }
+    .stat-lbl {
+      font-family: var(--font-mono);
+      font-size: 0.62rem; color: var(--muted);
+      margin-top: 0.35rem; display: block;
+      text-transform: uppercase; letter-spacing: .08em;
+    }
 
     /* ─── CARDS ──────────────────────────────────────────────────────── */
     .card {
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.5rem;
+      background: var(--ink-2);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 1.5rem;
+      transition: border-color .25s, box-shadow .25s;
     }
-    .card-grid { display: grid; gap: 1rem; }
+    .card:hover { border-color: var(--dim); }
+
+    .card-grid { display: grid; gap: 1px; background: var(--rule); }
+    .card-grid > * { background: var(--ink-2); }
     .card-grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
     .card-grid-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-    .card-grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    .card-grid-4 { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+    .card-grid-sep { gap: 1rem; background: transparent; }
+    .card-grid-sep > * { background: var(--ink-2); border: 1px solid var(--rule); }
 
-    .card-icon {
-      width: 40px; height: 40px; border-radius: 10px;
+    /* Card variants */
+    .card-teal  { border-left: 2px solid var(--teal); }
+    .card-gold  { border-left: 2px solid var(--gold); }
+    .card-indigo{ border-left: 2px solid var(--indigo); }
+    .card-crimson { border-left: 2px solid var(--crimson); background: var(--crimson-dim); }
+    .card-green { border-left: 2px solid var(--green); }
+
+    /* ─── SECTION-ICON ───────────────────────────────────────────────── */
+    .sicon {
+      width: 36px; height: 36px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem; margin-bottom: 0.85rem;
+      font-size: 1.1rem; margin-bottom: 0.85rem;
+      border: 1px solid var(--rule); border-radius: 2px;
     }
-    .icon-blue   { background: var(--blue-d); color: var(--blue); }
-    .icon-green  { background: var(--green-d); color: var(--green); }
-    .icon-orange { background: var(--orange-d); color: var(--orange); }
-    .icon-purple { background: var(--purple-d); color: var(--purple); }
 
-    .card h3 { margin-bottom: 0.4rem; }
-    .card p { font-size: 0.88rem; }
-
-    /* ─── PROBLEM CARDS ──────────────────────────────────────────────── */
-    .problem-card {
-      border-left: 3px solid var(--red);
-      background: rgba(248,81,73,0.05);
+    /* ─── CALLOUTS ───────────────────────────────────────────────────── */
+    .callout {
+      display: flex; gap: 1.1rem; align-items: flex-start;
+      padding: 1.4rem 1.6rem; border-radius: 2px;
+      margin: 2rem 0;
     }
+    .callout-teal   { background: var(--teal-dim);   border: 1px solid var(--teal-border); border-left: 3px solid var(--teal); }
+    .callout-gold   { background: var(--gold-dim);   border: 1px solid var(--gold-border); border-left: 3px solid var(--gold); }
+    .callout-green  { background: var(--green-dim);  border: 1px solid rgba(52,211,153,.2); border-left: 3px solid var(--green); }
+    .callout-icon   { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.05rem; }
+    .callout h4     { margin-bottom: 0.3rem; }
+    .callout p      { font-size: 0.88rem; max-width: none; }
+    .callout-teal h4 { color: var(--teal); }
+    .callout-gold h4 { color: var(--gold); }
+    .callout-green h4 { color: var(--green); }
 
     /* ─── LAYER STACK ────────────────────────────────────────────────── */
-    .layer-stack { display: flex; flex-direction: column; gap: 0; }
+    .layer-stack { border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; }
     .layer {
       display: flex; align-items: stretch;
-      border-radius: 0; position: relative;
+      border-bottom: 1px solid var(--rule);
     }
-    .layer:first-child { border-radius: 12px 12px 0 0; }
-    .layer:last-child  { border-radius: 0 0 12px 12px; }
-    .layer-badge {
-      display: flex; align-items: center; justify-content: center;
+    .layer:last-child { border-bottom: none; }
+    .layer-num {
+      font-family: var(--font-mono);
+      font-size: 0.62rem; font-weight: 500;
+      letter-spacing: .1em; text-transform: uppercase;
       writing-mode: vertical-lr; text-orientation: mixed;
-      padding: 1rem 0.6rem; font-size: 0.65rem; font-weight: 700;
-      letter-spacing: .08em; text-transform: uppercase; min-width: 44px;
+      padding: 1.2rem 0.6rem;
+      min-width: 40px;
+      display: flex; align-items: center; justify-content: center;
     }
     .layer-body { flex: 1; padding: 1.4rem 1.6rem; }
+    .layer-body h3 { margin-bottom: 0.4rem; }
+    .layer-body p  { font-size: 0.88rem; max-width: none; }
     .layer-speed {
-      padding: 1rem 1.2rem;
-      display: flex; flex-direction: column; align-items: flex-end;
-      justify-content: center; gap: 0.3rem;
+      padding: 1.2rem; display: flex; flex-direction: column;
+      align-items: flex-end; justify-content: center; gap: 0.25rem;
     }
-    .speed-chip {
-      font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.6rem;
-      border-radius: 20px; white-space: nowrap;
+    .speed-val {
+      font-family: var(--font-mono); font-size: 0.95rem; font-weight: 500;
     }
+    .speed-lbl { font-size: 0.62rem; color: var(--muted); font-family: var(--font-mono); }
 
-    .layer-1 { background: linear-gradient(135deg, rgba(63,185,80,.08), transparent); border: 1px solid rgba(63,185,80,.25); }
-    .layer-1 .layer-badge { background: var(--green-d); color: var(--green); }
-    .layer-1 .speed-chip { background: var(--green-d); color: var(--green); }
+    .layer-teal   { background: rgba(0,212,170,.03); }
+    .layer-teal   .layer-num { background: rgba(0,212,170,.08); color: var(--teal); }
+    .layer-teal   .speed-val { color: var(--teal); }
 
-    .layer-2 { background: linear-gradient(135deg, rgba(88,166,255,.08), transparent); border: 1px solid rgba(88,166,255,.25); border-top: none; }
-    .layer-2 .layer-badge { background: var(--blue-d); color: var(--blue); }
-    .layer-2 .speed-chip { background: var(--blue-d); color: var(--blue); }
+    .layer-indigo { background: rgba(129,140,248,.03); }
+    .layer-indigo .layer-num { background: rgba(129,140,248,.08); color: var(--indigo); }
+    .layer-indigo .speed-val { color: var(--indigo); }
 
-    .layer-3 { background: linear-gradient(135deg, rgba(210,168,255,.08), transparent); border: 1px solid rgba(210,168,255,.25); border-top: none; }
-    .layer-3 .layer-badge { background: var(--purple-d); color: var(--purple); }
-    .layer-3 .speed-chip { background: var(--purple-d); color: var(--purple); }
+    .layer-gold   { background: rgba(232,160,32,.03); }
+    .layer-gold   .layer-num { background: rgba(232,160,32,.08); color: var(--gold); }
+    .layer-gold   .speed-val { color: var(--gold); }
 
-    /* ─── DATA SOURCE GRID ───────────────────────────────────────────── */
-    .source-card {
-      border-top: 3px solid transparent;
-      padding: 1.4rem;
+    /* ─── PILLS ──────────────────────────────────────────────────────── */
+    .pill-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
+    .pill {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      padding: 0.2rem 0.65rem; border-radius: 2px;
+      border: 1px solid var(--rule); color: var(--muted);
+      background: var(--ink-3);
     }
-    .source-1 { border-top-color: var(--blue); }
-    .source-2 { border-top-color: var(--green); }
-    .source-3 { border-top-color: var(--orange); }
-    .source-4 { border-top-color: var(--purple); }
+    .pill-teal   { border-color: var(--teal-border);   color: var(--teal);   background: var(--teal-dim); }
+    .pill-indigo { border-color: var(--indigo-border); color: var(--indigo); background: var(--indigo-dim); }
+    .pill-gold   { border-color: var(--gold-border);   color: var(--gold);   background: var(--gold-dim); }
+    .pill-green  { border-color: rgba(52,211,153,.2);  color: var(--green);  background: var(--green-dim); }
 
+    /* ─── FEATURE TAG ────────────────────────────────────────────────── */
+    .ftag {
+      font-family: var(--font-mono); font-size: 0.62rem; font-weight: 500;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: 0.15rem 0.5rem; border-radius: 2px;
+      display: inline-block; margin-bottom: 0.65rem;
+    }
+    .ftag-teal   { background: var(--teal-dim);   color: var(--teal);   border: 1px solid var(--teal-border); }
+    .ftag-indigo { background: var(--indigo-dim); color: var(--indigo); border: 1px solid var(--indigo-border); }
+    .ftag-gold   { background: var(--gold-dim);   color: var(--gold);   border: 1px solid var(--gold-border); }
+    .ftag-green  { background: var(--green-dim);  color: var(--green);  border: 1px solid rgba(52,211,153,.2); }
+
+    /* ─── SOURCE CARDS ───────────────────────────────────────────────── */
     .source-num {
-      font-size: 2rem; font-weight: 900; line-height: 1;
-      margin-bottom: 0.5rem; opacity: 0.25;
+      font-family: var(--font-mono); font-size: 2.5rem; font-weight: 500;
+      line-height: 1; margin-bottom: 0.75rem;
+      opacity: 0.15; display: block;
     }
 
     /* ─── COMPARISON TABLE ───────────────────────────────────────────── */
-    .comparison-table { width: 100%; border-collapse: collapse; }
-    .comparison-table th, .comparison-table td {
-      padding: 0.85rem 1.1rem; text-align: left;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.88rem;
+    .ctable { width: 100%; border-collapse: collapse; }
+    .ctable th, .ctable td {
+      padding: 0.8rem 1rem; text-align: left;
+      border-bottom: 1px solid var(--rule);
+      font-size: 0.85rem;
     }
-    .comparison-table thead tr { background: var(--bg3); }
-    .comparison-table th { font-weight: 600; color: var(--text); }
-    .comparison-table td { color: var(--muted); }
-    .comparison-table td.before { color: var(--red); }
-    .comparison-table td.after  { color: var(--green); }
-    .comparison-table tbody tr:hover { background: var(--bg3); }
-
-    /* ─── FEATURE GRID ───────────────────────────────────────────────── */
-    .feature-card {
-      padding: 1.4rem;
-      transition: border-color .2s, transform .2s;
+    .ctable thead th {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted); background: var(--ink-3);
+      padding-top: 1rem; padding-bottom: 1rem;
     }
-    .feature-card:hover { border-color: var(--blue); transform: translateY(-2px); }
-    .feature-tag {
-      display: inline-block; font-size: 0.68rem; font-weight: 600;
-      padding: 0.15rem 0.5rem; border-radius: 4px; margin-bottom: 0.6rem;
-    }
+    .ctable thead th:first-child { border-left: 2px solid var(--teal); }
+    .ctable td { color: var(--muted); }
+    .ctable td strong { color: var(--text); }
+    .ctable td.bad  { color: var(--crimson); }
+    .ctable td.good { color: var(--teal); }
+    .ctable tbody tr:hover { background: var(--ink-3); }
 
     /* ─── METRIC CARDS ───────────────────────────────────────────────── */
-    .metric-card {
-      text-align: center; padding: 2rem 1.5rem;
+    .metric-card { text-align: center; padding: 2.2rem 1.5rem; }
+    .metric-num {
+      font-family: var(--font-mono); font-size: 2.4rem; font-weight: 500;
+      line-height: 1; margin-bottom: 0.5rem;
     }
-    .metric-num { font-size: 2.4rem; font-weight: 900; line-height: 1; margin-bottom: 0.3rem; }
-    .metric-label { font-size: 0.82rem; color: var(--muted); }
+    .metric-lbl { font-size: 0.8rem; color: var(--muted); }
 
     /* ─── DIAGRAM WRAPPER ────────────────────────────────────────────── */
     .diagram-wrap {
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 2rem 1.5rem;
-      overflow-x: auto;
+      background: rgba(0,0,0,.35);
+      border: 1px solid var(--rule);
+      border-radius: 2px; padding: 2rem 1.5rem;
+      overflow-x: auto; margin: 1.5rem 0;
     }
     .diagram-wrap .mermaid { display: flex; justify-content: center; }
-
-    /* ─── FLOW STEPS ─────────────────────────────────────────────────── */
-    .flow-steps {
-      display: flex; flex-wrap: wrap; gap: 0;
-      position: relative;
+    .diagram-label {
+      font-family: var(--font-mono); font-size: 0.66rem;
+      color: var(--muted); text-transform: uppercase;
+      letter-spacing: .1em; padding: 0.4rem 0.8rem;
+      border-bottom: 1px solid var(--rule);
+      margin: -2rem -1.5rem 1.5rem;
     }
-    .flow-step {
-      flex: 1; min-width: 140px;
-      display: flex; flex-direction: column; align-items: center;
-      text-align: center; padding: 1.5rem 1rem;
-      position: relative;
-    }
-    .flow-step::after {
-      content: '→';
-      position: absolute; right: -10px; top: 50%;
-      transform: translateY(-50%);
-      color: var(--muted); font-size: 1.2rem; z-index: 1;
-    }
-    .flow-step:last-child::after { display: none; }
-    .step-num {
-      width: 36px; height: 36px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem; font-weight: 700; margin-bottom: 0.7rem;
-    }
-    .step-title { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 0.3rem; }
-    .step-desc  { font-size: 0.75rem; color: var(--muted); }
 
     /* ─── ROADMAP ────────────────────────────────────────────────────── */
-    .roadmap { display: flex; flex-direction: column; gap: 0; }
-    .roadmap-phase {
-      display: flex; gap: 1.5rem;
-      padding: 1.5rem 0; border-bottom: 1px solid var(--border);
+    .roadmap { position: relative; }
+    .roadmap::before {
+      content: ''; position: absolute;
+      left: 7px; top: 8px; bottom: 0; width: 1px;
+      background: linear-gradient(180deg, var(--teal) 0%, var(--indigo) 50%, var(--rule) 100%);
+      opacity: 0.4;
     }
-    .roadmap-phase:last-child { border-bottom: none; }
-    .phase-marker {
-      display: flex; flex-direction: column; align-items: center; flex-shrink: 0;
+    .rphase { display: flex; gap: 1.75rem; padding: 1.75rem 0; border-bottom: 1px solid var(--rule); }
+    .rphase:last-child { border-bottom: none; }
+    .rphase-dot {
+      width: 15px; height: 15px; border-radius: 50%;
+      border: 2px solid; flex-shrink: 0; margin-top: 0.22rem;
+      position: relative; z-index: 1;
     }
-    .phase-dot {
-      width: 14px; height: 14px; border-radius: 50%;
-      border: 2px solid; flex-shrink: 0;
-      margin-top: 0.2rem;
+    .rphase-body { flex: 1; }
+    .rphase-tag {
+      font-family: var(--font-mono); font-size: 0.65rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .1em; margin-bottom: 0.25rem;
     }
-    .phase-line { width: 2px; flex: 1; margin-top: 4px; }
-    .phase-content { flex: 1; }
-    .phase-tag {
-      font-size: 0.7rem; font-weight: 600; letter-spacing: .08em;
-      text-transform: uppercase; margin-bottom: 0.3rem;
+    .ritem {
+      font-size: 0.84rem; color: var(--muted);
+      padding: 0.18rem 0; display: flex; gap: 0.6rem;
     }
-    .phase-items { margin-top: 0.75rem; }
-    .phase-item {
-      display: flex; align-items: flex-start; gap: 0.5rem;
-      font-size: 0.85rem; color: var(--muted); padding: 0.2rem 0;
-    }
-    .phase-item::before { content: '▸'; color: inherit; flex-shrink: 0; }
-    .phase-live .phase-dot { border-color: var(--green); background: var(--green); }
-    .phase-live .phase-line { background: var(--green); opacity: 0.3; }
-    .phase-live .phase-tag { color: var(--green); }
-    .phase-live .phase-item::before { color: var(--green); }
-    .phase-next .phase-dot { border-color: var(--blue); }
-    .phase-next .phase-line { background: var(--blue); opacity: 0.3; }
-    .phase-next .phase-tag { color: var(--blue); }
-    .phase-next .phase-item::before { color: var(--blue); }
-    .phase-future .phase-dot { border-color: var(--purple); }
-    .phase-future .phase-line { background: none; }
-    .phase-future .phase-tag { color: var(--purple); }
-    .phase-future .phase-item::before { color: var(--purple); }
+    .ritem::before { content: '—'; opacity: 0.4; flex-shrink: 0; }
 
-    /* ─── CALLOUT ────────────────────────────────────────────────────── */
-    .callout {
-      border-radius: 12px; padding: 1.5rem 1.75rem;
-      display: flex; gap: 1rem; align-items: flex-start;
-      margin: 2rem 0;
-    }
-    .callout-blue   { background: var(--blue-d); border: 1px solid rgba(88,166,255,.3); }
-    .callout-green  { background: var(--green-d); border: 1px solid rgba(63,185,80,.3); }
-    .callout-orange { background: var(--orange-d); border: 1px solid rgba(240,136,62,.3); }
-    .callout-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.1rem; }
-    .callout h4 { font-size: 0.95rem; margin-bottom: 0.3rem; }
-    .callout p  { font-size: 0.88rem; max-width: none; }
-    .callout-blue   h4 { color: var(--blue); }
-    .callout-green  h4 { color: var(--green); }
-    .callout-orange h4 { color: var(--orange); }
+    .rphase-live .rphase-dot { border-color: var(--teal); background: var(--teal); box-shadow: 0 0 8px rgba(0,212,170,.5); }
+    .rphase-live .rphase-tag { color: var(--teal); }
+    .rphase-live .ritem::before { color: var(--teal); opacity: 0.6; }
 
-    /* ─── PILL LIST ──────────────────────────────────────────────────── */
-    .pill-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
-    .pill {
-      font-size: 0.78rem; font-weight: 500;
-      padding: 0.3rem 0.8rem; border-radius: 20px;
-      background: var(--bg4); border: 1px solid var(--border);
-      color: var(--muted);
-    }
+    .rphase-next .rphase-dot { border-color: var(--indigo); }
+    .rphase-next .rphase-tag { color: var(--indigo); }
+    .rphase-next .ritem::before { color: var(--indigo); opacity: 0.6; }
+
+    .rphase-future .rphase-dot { border-color: var(--dim); }
+    .rphase-future .rphase-tag { color: var(--muted); }
 
     /* ─── STACK ROW ──────────────────────────────────────────────────── */
-    .stack-row {
-      display: flex; flex-wrap: wrap; gap: 0.75rem;
-      margin-top: 1rem;
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 1px; background: var(--rule);
+      border: 1px solid var(--rule); border-radius: 2px;
+      overflow: hidden;
     }
     .stack-item {
-      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 1rem 1.2rem; min-width: 90px;
-      text-align: center;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0.3rem; padding: 1rem 0.75rem; text-align: center;
+      background: var(--ink-2); transition: background .2s;
     }
-    .stack-item .si-icon { font-size: 1.4rem; }
-    .stack-item .si-name { font-size: 0.72rem; font-weight: 600; color: var(--text); }
-    .stack-item .si-role { font-size: 0.65rem; color: var(--muted); }
+    .stack-item:hover { background: var(--ink-3); }
+    .si-icon { font-size: 1.3rem; }
+    .si-name { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 500; color: var(--text); }
+    .si-role { font-size: 0.62rem; color: var(--muted); }
 
-    /* ─── SECTION HEADER ─────────────────────────────────────────────── */
-    .section-header { margin-bottom: 3rem; }
-    .section-header p { margin-top: 0.75rem; font-size: 1.05rem; }
+    /* ─── PROCESS STEPS ──────────────────────────────────────────────── */
+    .psteps { display: flex; flex-wrap: wrap; gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; }
+    .pstep { flex: 1; min-width: 180px; padding: 1.4rem 1.2rem; background: var(--ink-2); position: relative; }
+    .pstep-num {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      color: var(--teal); margin-bottom: 0.5rem; display: block;
+      letter-spacing: .08em;
+    }
+    .pstep h4 { margin-bottom: 0.35rem; font-size: 0.88rem; }
+    .pstep p  { font-size: 0.8rem; }
 
-    /* ─── DIVIDER ────────────────────────────────────────────────────── */
-    .divider { height: 1px; background: var(--border); margin: 2.5rem 0; }
+    /* ─── DEPT CARDS ─────────────────────────────────────────────────── */
+    .dept-card { padding: 1.4rem; }
+    .dept-icon { font-size: 1.4rem; margin-bottom: 0.5rem; display: block; }
+
+    /* ─── SUMMARY SECTION ────────────────────────────────────────────── */
+    #summary {
+      background: radial-gradient(ellipse 60% 50% at 50% 100%, rgba(0,212,170,.05) 0%, transparent 70%);
+    }
 
     /* ─── FOOTER ─────────────────────────────────────────────────────── */
     footer {
-      padding: 3rem 2rem;
-      background: var(--bg2); border-top: 1px solid var(--border);
-      text-align: center;
+      background: var(--ink-2); border-top: 1px solid var(--rule);
+      padding: 3rem 2.5rem; text-align: center;
     }
-    footer p { font-size: 0.82rem; color: var(--muted); max-width: none; margin: 0 auto; }
-    footer a { color: var(--blue); }
+    .footer-logo {
+      font-family: var(--font-mono); font-size: 1rem; font-weight: 500;
+      color: var(--teal); margin-bottom: 0.75rem; display: block;
+      letter-spacing: .06em;
+    }
+    footer p { font-size: 0.8rem; color: var(--muted); max-width: none; }
+    footer a { color: var(--teal); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-divider { width: 2rem; height: 1px; background: var(--teal); margin: 1.25rem auto; opacity: 0.4; }
 
     /* ─── RESPONSIVE ─────────────────────────────────────────────────── */
     @media (max-width: 640px) {
-      .hero-stats { gap: 1rem; }
-      .flow-step::after { display: none; }
-      .layer-speed { display: none; }
       nav { padding: 0 1rem; }
-      .container { padding: 0 1.2rem; }
-      section { padding: 3.5rem 0; }
+      .container { padding: 0 1.25rem; }
+      section { padding: 4rem 0; }
+      #hero { padding: 5rem 0 3.5rem; }
+      .hero-stats { grid-template-columns: repeat(2, 1fr); }
+      .layer-speed { display: none; }
+      .pstep { min-width: 100%; }
+      h2::after { margin-top: 0.5rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════════════════ NAVIGATION -->
+<!-- ══════════════════════════════════════ NAVIGATION -->
 <nav>
-  <span class="logo">HSTC</span>
+  <span class="nav-logo">HSTC<span>_</span></span>
   <a href="#problem">Problem</a>
   <a href="#solution">Solution</a>
   <a href="#data">Data</a>
   <a href="#search">Search</a>
   <a href="#features">Features</a>
   <a href="#workflow">Workflow</a>
-  <a href="#internal">Internal Tool</a>
+  <a href="#internal">Internal</a>
   <a href="#scale">Scale-Up</a>
-  <a href="#tech">Technology</a>
+  <a href="#tech">Tech</a>
   <a href="#roadmap">Roadmap</a>
+  <div class="nav-live">
+    <span class="live-dot"></span>
+    tracuuhs.com
+  </div>
 </nav>
 
-<!-- ═══════════════════════════════════════════════════════════════════ HERO -->
-<section id="hero" style="border-bottom:1px solid var(--border)">
+<!-- ══════════════════════════════════════ HERO -->
+<section id="hero">
   <div class="container">
-    <div class="hero-badge">
-      <span class="dot"></span>
-      Live at tracuuhs.com
-    </div>
+    <div class="hero-eyebrow">Product Documentation · 2025</div>
     <h1>Intelligent HS Code<br>Classification Platform</h1>
-    <p class="hero-subtitle">
+    <p class="hero-tagline">
       A web-based tool that transforms how customs professionals, trade compliance teams, and
-      importers/exporters find the correct Harmonized System codes — from hours of manual lookup
-      to <strong>seconds of AI-assisted analysis</strong>.
+      importers/exporters find the correct Harmonized System codes —
+      from hours of manual research to <strong>seconds of AI-assisted analysis</strong>.
     </p>
-    <div class="hero-stats">
+    <div class="hero-stats reveal">
       <div class="hero-stat">
-        <span class="num">5,000+</span>
-        <span class="lbl">HS Codes indexed</span>
+        <span class="stat-num">5,000+</span>
+        <span class="stat-lbl">HS Codes indexed</span>
       </div>
       <div class="hero-stat">
-        <span class="num">4</span>
-        <span class="lbl">Official legal sources</span>
+        <span class="stat-num">04</span>
+        <span class="stat-lbl">Official legal sources</span>
       </div>
       <div class="hero-stat">
-        <span class="num">3</span>
-        <span class="lbl">Search intelligence layers</span>
+        <span class="stat-num">03</span>
+        <span class="stat-lbl">Search layers</span>
       </div>
       <div class="hero-stat">
-        <span class="num">&lt;100ms</span>
-        <span class="lbl">Keyword search response</span>
+        <span class="stat-num">&lt;100ms</span>
+        <span class="stat-lbl">Keyword response</span>
       </div>
       <div class="hero-stat">
-        <span class="num">~15s</span>
-        <span class="lbl">AI full analysis</span>
+        <span class="stat-num">~15s</span>
+        <span class="stat-lbl">AI full analysis</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════ PROBLEM -->
+<!-- ══════════════════════════════════════ 01 — PROBLEM -->
 <section id="problem">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header reveal">
       <div class="section-label">01 — The Problem</div>
       <h2>HS Code Classification is Hard,<br>Slow, and High-Stakes</h2>
-      <p>Every product a company imports or exports must carry a specific 8-digit HS code. Getting it wrong is not just an inconvenience — it triggers customs delays, financial penalties, and audit exposure.</p>
+      <p>Every product a company imports or exports must carry a specific 8-digit HS code. Getting it wrong is not an inconvenience — it triggers customs delays, financial penalties, and audit exposure.</p>
     </div>
 
-    <div class="callout callout-orange" style="margin-top:0">
-      <span class="callout-icon">⚠️</span>
+    <div class="callout callout-gold reveal">
+      <span class="callout-icon">◈</span>
       <div>
         <h4>What is an HS Code?</h4>
         <p>The Harmonized System (HS) is a standardized numerical method for classifying traded products, maintained by the World Customs Organization (WCO). In Vietnam, every import/export declaration must include an 8-digit HS code that determines: <strong>tariff rates (MFN, FTA discounts)</strong>, value-added tax obligations, import/export permits and licensing requirements, and trade statistics reporting.</p>
       </div>
     </div>
 
-    <div class="divider"></div>
+    <div class="rule reveal"></div>
 
-    <h3 style="margin-bottom:1.2rem">Current Pain Points</h3>
-    <div class="card-grid card-grid-2">
-      <div class="card problem-card">
-        <div style="font-size:1.5rem;margin-bottom:0.6rem">📚</div>
+    <h3 style="margin-bottom:1.4rem" class="reveal">Current Pain Points</h3>
+    <div class="card-grid card-grid-2 reveal">
+      <div class="card card-crimson dept-card">
+        <span class="dept-icon">📚</span>
         <h3>Massive Reference Volume</h3>
-        <p>The Vietnam Tariff Schedule has 97 chapters and thousands of headings. The Explanatory Notes that guide classification span thousands of pages. No one can memorize all of it.</p>
+        <p style="font-size:.85rem;margin-top:.35rem">The Vietnam Tariff Schedule has 97 chapters and thousands of headings. The Explanatory Notes span thousands of pages. No one can memorize all of it.</p>
       </div>
-      <div class="card problem-card">
-        <div style="font-size:1.5rem;margin-bottom:0.6rem">🔍</div>
+      <div class="card card-crimson dept-card">
+        <span class="dept-icon">🔍</span>
         <h3>Multi-Source Verification Required</h3>
-        <p>Correct classification requires cross-referencing the Tariff Schedule, WCO Explanatory Notes, Vietnam Supplementary Notes, and recent classification rulings — all in different formats and locations.</p>
+        <p style="font-size:.85rem;margin-top:.35rem">Correct classification requires cross-referencing the Tariff Schedule, WCO Explanatory Notes, Vietnam Supplementary Notes, and recent rulings — all in different formats and locations.</p>
       </div>
-      <div class="card problem-card">
-        <div style="font-size:1.5rem;margin-bottom:0.6rem">⏱️</div>
+      <div class="card card-crimson dept-card">
+        <span class="dept-icon">⏱</span>
         <h3>Time-Intensive Manual Process</h3>
-        <p>A single unfamiliar product classification can take an experienced professional 30–60 minutes of research. For companies processing dozens of new SKUs monthly, this is a significant bottleneck.</p>
+        <p style="font-size:.85rem;margin-top:.35rem">A single unfamiliar product can take an experienced professional 30–60 minutes of research. For companies processing dozens of new SKUs monthly, this is a significant bottleneck.</p>
       </div>
-      <div class="card problem-card">
-        <div style="font-size:1.5rem;margin-bottom:0.6rem">💸</div>
+      <div class="card card-crimson dept-card">
+        <span class="dept-icon">💸</span>
         <h3>High Cost of Errors</h3>
-        <p>Misclassification leads to: post-clearance audits and penalties from the General Department of Customs, overpaid or underpaid tariffs, missed FTA preferential rates, and shipment holds that disrupt supply chains.</p>
+        <p style="font-size:.85rem;margin-top:.35rem">Misclassification leads to: post-clearance audits, overpaid or underpaid tariffs, missed FTA preferential rates, and shipment holds that disrupt supply chains.</p>
       </div>
-      <div class="card problem-card">
-        <div style="font-size:1.5rem;margin-bottom:0.6rem">🧠</div>
+      <div class="card card-crimson dept-card">
+        <span class="dept-icon">🧠</span>
         <h3>Knowledge Locked in Individuals</h3>
-        <p>Classification expertise lives in the heads of a few experienced staff. When they leave, institutional knowledge goes with them. There is no systematic way to capture or share classification decisions.</p>
+        <p style="font-size:.85rem;margin-top:.35rem">Classification expertise lives in the heads of a few experienced staff. When they leave, institutional knowledge goes with them. There is no systematic way to capture it.</p>
       </div>
-      <div class="card problem-card">
-        <div style="font-size:1.5rem;margin-bottom:0.6rem">📋</div>
+      <div class="card card-crimson dept-card">
+        <span class="dept-icon">📋</span>
         <h3>Ruling Changes Are Easy to Miss</h3>
-        <p>Vietnam Customs Authority (TCHQ/CHQ) issues hundreds of classification rulings per year. Keeping up with these rulings requires constant monitoring — most teams simply cannot do this manually.</p>
+        <p style="font-size:.85rem;margin-top:.35rem">Vietnam Customs Authority (TCHQ/CHQ) issues hundreds of rulings per year. Keeping up with them requires constant monitoring — most teams simply cannot do this manually.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════ SOLUTION -->
+<!-- ══════════════════════════════════════ 02 — SOLUTION -->
 <section id="solution">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header reveal">
       <div class="section-label">02 — The Solution</div>
       <h2>One Platform. Four Data Sources.<br>Three Search Layers.</h2>
       <p>HSTC aggregates all official classification sources into a single, fast, intelligent search interface. The platform does not replace professional judgment — it surfaces the most relevant legal evidence, instantly.</p>
     </div>
 
-    <div class="diagram-wrap">
+    <div class="diagram-wrap reveal">
+      <div class="diagram-label">Fig 01 — Platform Architecture Overview</div>
       <div class="mermaid">
 flowchart TB
     U([👤 User — Customs Officer / Trade Compliance Team]) --> S
@@ -524,8 +689,8 @@ flowchart TB
       </div>
     </div>
 
-    <div class="callout callout-blue" style="margin-top:2rem">
-      <span class="callout-icon">💡</span>
+    <div class="callout callout-teal reveal">
+      <span class="callout-icon">◈</span>
       <div>
         <h4>Design Philosophy: Evidence-Based, Not Decisive</h4>
         <p>HSTC presents the most relevant legal evidence — tariff descriptions, explanatory note excerpts, and official rulings — so that the qualified professional can make an informed, defensible classification decision. The AI layer provides ranked recommendations with explicit citations, not black-box answers.</p>
@@ -534,67 +699,63 @@ flowchart TB
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════ DATA FOUNDATION -->
+<!-- ══════════════════════════════════════ 03 — DATA -->
 <section id="data">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header reveal">
       <div class="section-label">03 — Data Foundation</div>
       <h2>Four Official Legal Sources,<br>Pre-Compiled and Indexed</h2>
       <p>Every result HSTC returns is sourced from official, authoritative documents. The platform does not generate or invent classification guidance — it retrieves and presents what the law says.</p>
     </div>
 
-    <div class="card-grid card-grid-2">
-      <div class="card source-card source-1">
-        <div class="source-num">01</div>
-        <div class="card-icon icon-blue">🗂️</div>
+    <div class="card-grid card-grid-2 reveal">
+      <div class="card" style="border-top:2px solid var(--teal);padding:1.6rem">
+        <span class="source-num" style="color:var(--teal)">01</span>
         <h3>Vietnam Tariff Schedule</h3>
-        <p style="margin-top:0.5rem">The official 8-digit HS code listing for Vietnam, covering all 97 chapters and approximately 5,000+ headings and subheadings. Includes MFN tariff rates, VAT rates, and applicable notes for each code.</p>
-        <div class="pill-list">
-          <span class="pill">97 Chapters</span>
-          <span class="pill">5,000+ HS Codes</span>
+        <p style="font-size:.85rem;margin-top:.4rem">The official 8-digit HS code listing for Vietnam, covering all 97 chapters and approximately 5,000+ headings and subheadings. Includes MFN tariff rates, VAT rates, and applicable notes for each code.</p>
+        <div class="pill-row">
+          <span class="pill pill-teal">97 Chapters</span>
+          <span class="pill pill-teal">5,000+ HS Codes</span>
           <span class="pill">MFN Rates</span>
           <span class="pill">VAT Rates</span>
         </div>
       </div>
-      <div class="card source-card source-2">
-        <div class="source-num">02</div>
-        <div class="card-icon icon-green">📘</div>
+      <div class="card" style="border-top:2px solid var(--green);padding:1.6rem">
+        <span class="source-num" style="color:var(--green)">02</span>
         <h3>WCO Explanatory Notes (EN)</h3>
-        <p style="margin-top:0.5rem">The authoritative international interpretation guide published by the World Customs Organization. These notes explain the scope and boundaries of each heading — what is included, what is excluded, and why. Available in both English and Vietnamese.</p>
-        <div class="pill-list">
-          <span class="pill">Bilingual EN/VI</span>
-          <span class="pill">WCO Official</span>
+        <p style="font-size:.85rem;margin-top:.4rem">The authoritative international interpretation guide published by the World Customs Organization. These notes explain the scope and boundaries of each heading — what is included, what is excluded, and why. Available in both English and Vietnamese.</p>
+        <div class="pill-row">
+          <span class="pill pill-green">Bilingual EN/VI</span>
+          <span class="pill pill-green">WCO Official</span>
           <span class="pill">Heading Scope</span>
           <span class="pill">Inclusion/Exclusion</span>
         </div>
       </div>
-      <div class="card source-card source-3">
-        <div class="source-num">03</div>
-        <div class="card-icon icon-orange">📗</div>
+      <div class="card" style="border-top:2px solid var(--gold);padding:1.6rem">
+        <span class="source-num" style="color:var(--gold)">03</span>
         <h3>Vietnam Supplementary Explanatory Notes (SEN)</h3>
-        <p style="margin-top:0.5rem">Vietnam-specific supplementary notes that extend the WCO guidance with local context, domestic product definitions, and Vietnam Customs Authority interpretations specific to the Vietnamese tariff schedule.</p>
-        <div class="pill-list">
-          <span class="pill">Vietnam-Specific</span>
-          <span class="pill">Local Context</span>
+        <p style="font-size:.85rem;margin-top:.4rem">Vietnam-specific supplementary notes that extend the WCO guidance with local context, domestic product definitions, and Vietnam Customs Authority interpretations specific to the Vietnamese tariff schedule.</p>
+        <div class="pill-row">
+          <span class="pill pill-gold">Vietnam-Specific</span>
+          <span class="pill pill-gold">Local Context</span>
           <span class="pill">VCCA Guidance</span>
         </div>
       </div>
-      <div class="card source-card source-4">
-        <div class="source-num">04</div>
-        <div class="card-icon icon-purple">📕</div>
+      <div class="card" style="border-top:2px solid var(--indigo);padding:1.6rem">
+        <span class="source-num" style="color:var(--indigo)">04</span>
         <h3>Classification Rulings (TB-CHQ)</h3>
-        <p style="margin-top:0.5rem">Official classification rulings issued by the General Department of Vietnam Customs (TCHQ/CHQ). These decisions on specific products create binding precedents that customs officers and importers must follow. Updated continuously from official government sources.</p>
-        <div class="pill-list">
-          <span class="pill">Official Rulings</span>
-          <span class="pill">Binding Precedents</span>
+        <p style="font-size:.85rem;margin-top:.4rem">Official classification rulings issued by the General Department of Vietnam Customs (TCHQ/CHQ). These decisions on specific products create binding precedents that customs officers and importers must follow. Updated continuously from official government sources.</p>
+        <div class="pill-row">
+          <span class="pill pill-indigo">Official Rulings</span>
+          <span class="pill pill-indigo">Binding Precedents</span>
           <span class="pill">Auto-Crawled</span>
           <span class="pill">Continuously Updated</span>
         </div>
       </div>
     </div>
 
-    <div class="callout callout-green" style="margin-top:2rem">
-      <span class="callout-icon">🔄</span>
+    <div class="callout callout-green reveal">
+      <span class="callout-icon">↻</span>
       <div>
         <h4>Automated Ruling Updates</h4>
         <p>HSTC includes an automated crawler that continuously indexes new classification rulings from the official Vietnamese legal database (thuvienphapluat.vn). Rulings are parsed, stored, and indexed automatically — so the knowledge base stays current without manual effort.</p>
@@ -603,75 +764,73 @@ flowchart TB
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════ SEARCH LAYERS -->
+<!-- ══════════════════════════════════════ 04 — SEARCH -->
 <section id="search">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header reveal">
       <div class="section-label">04 — Search Intelligence</div>
       <h2>Three Layers of Search,<br>Each Smarter Than the Last</h2>
       <p>Users can choose the level of analysis they need — from instant keyword results to full AI-powered classification with cited legal reasoning. Each layer builds on the one above it.</p>
     </div>
 
-    <div class="layer-stack">
-      <div class="layer layer-1">
-        <div class="layer-badge">Layer 1</div>
+    <div class="layer-stack reveal">
+      <div class="layer layer-teal">
+        <div class="layer-num">Layer 1</div>
         <div class="layer-body">
-          <h3 style="color:var(--green);margin-bottom:0.4rem">⚡ Keyword Search — BM25 Algorithm</h3>
-          <p style="max-width:none;font-size:0.9rem">Type product keywords in Vietnamese or English. The BM25 ranking algorithm scores all HS headings by relevance against the keyword against the Tariff Schedule, Explanatory Notes, and Rulings simultaneously. Vietnamese diacritics are handled automatically — typing without accents works just as well.</p>
-          <div class="pill-list" style="margin-top:0.75rem">
-            <span class="pill" style="background:var(--green-d);color:var(--green);border-color:rgba(63,185,80,.3)">Vietnamese &amp; English</span>
-            <span class="pill" style="background:var(--green-d);color:var(--green);border-color:rgba(63,185,80,.3)">Accent-insensitive</span>
-            <span class="pill" style="background:var(--green-d);color:var(--green);border-color:rgba(63,185,80,.3)">All 4 sources</span>
-            <span class="pill" style="background:var(--green-d);color:var(--green);border-color:rgba(63,185,80,.3)">Relevance-ranked</span>
+          <h3 style="color:var(--teal)">Keyword Search — BM25 Algorithm</h3>
+          <p>Type product keywords in Vietnamese or English. The BM25 ranking algorithm scores all HS headings by relevance against the Tariff Schedule, Explanatory Notes, and Rulings simultaneously. Vietnamese diacritics are handled automatically — typing without accents works just as well.</p>
+          <div class="pill-row">
+            <span class="pill pill-teal">Vietnamese &amp; English</span>
+            <span class="pill pill-teal">Accent-insensitive</span>
+            <span class="pill pill-teal">All 4 sources</span>
+            <span class="pill pill-teal">Relevance-ranked</span>
           </div>
         </div>
         <div class="layer-speed">
-          <span class="speed-chip">&lt;100ms</span>
-          <span style="font-size:0.68rem;color:var(--muted)">instant</span>
+          <span class="speed-val" style="color:var(--teal)">&lt;100ms</span>
+          <span class="speed-lbl">instant</span>
         </div>
       </div>
-
-      <div class="layer layer-2">
-        <div class="layer-badge">Layer 2</div>
+      <div class="layer layer-indigo">
+        <div class="layer-num">Layer 2</div>
         <div class="layer-body">
-          <h3 style="color:var(--blue);margin-bottom:0.4rem">🧠 Semantic Search — AI Embeddings</h3>
-          <p style="max-width:none;font-size:0.9rem">When keywords miss the mark, semantic search finds matches based on <em>meaning</em>. The system converts both the query and all legal documents into AI vector embeddings, enabling concept-level matching. A search for "đế giày" (shoe sole) will surface relevant headings even if those exact words don't appear in the tariff description.</p>
-          <div class="pill-list" style="margin-top:0.75rem">
-            <span class="pill" style="background:var(--blue-d);color:var(--blue);border-color:rgba(88,166,255,.3)">Concept matching</span>
-            <span class="pill" style="background:var(--blue-d);color:var(--blue);border-color:rgba(88,166,255,.3)">AI embeddings</span>
-            <span class="pill" style="background:var(--blue-d);color:var(--blue);border-color:rgba(88,166,255,.3)">9,700+ indexed chunks</span>
+          <h3 style="color:var(--indigo)">Semantic Search — AI Embeddings</h3>
+          <p>When keywords miss the mark, semantic search finds matches based on <em>meaning</em>. The system converts both the query and all legal documents into AI vector embeddings, enabling concept-level matching. A search for "đế giày" (shoe sole) will surface relevant headings even if those exact words don't appear in the tariff description.</p>
+          <div class="pill-row">
+            <span class="pill pill-indigo">Concept matching</span>
+            <span class="pill pill-indigo">AI embeddings</span>
+            <span class="pill pill-indigo">9,700+ indexed chunks</span>
           </div>
         </div>
         <div class="layer-speed">
-          <span class="speed-chip">~2s</span>
-          <span style="font-size:0.68rem;color:var(--muted)">fast</span>
+          <span class="speed-val" style="color:var(--indigo)">~2s</span>
+          <span class="speed-lbl">fast</span>
         </div>
       </div>
-
-      <div class="layer layer-3">
-        <div class="layer-badge">Layer 3</div>
+      <div class="layer layer-gold">
+        <div class="layer-num">Layer 3</div>
         <div class="layer-body">
-          <h3 style="color:var(--purple);margin-bottom:0.4rem">🤖 AI Classification — GPT Analysis</h3>
-          <p style="max-width:none;font-size:0.9rem">For a full classification analysis, the AI Classification tool accepts a product name, description, material, and intended use — then runs a Retrieval-Augmented Generation (RAG) pipeline. It retrieves the most relevant legal context from BM25 and semantic search, then asks GPT-4o-mini to produce a ranked list of HS code candidates with explicit, cited reasoning in Vietnamese. The result is a structured classification analysis showing the 4-digit heading → 6-digit subheading → 8-digit code chain.</p>
-          <div class="pill-list" style="margin-top:0.75rem">
-            <span class="pill" style="background:var(--purple-d);color:var(--purple);border-color:rgba(210,168,255,.3)">RAG pipeline</span>
-            <span class="pill" style="background:var(--purple-d);color:var(--purple);border-color:rgba(210,168,255,.3)">Bilingual query expansion</span>
-            <span class="pill" style="background:var(--purple-d);color:var(--purple);border-color:rgba(210,168,255,.3)">Cited reasoning</span>
-            <span class="pill" style="background:var(--purple-d);color:var(--purple);border-color:rgba(210,168,255,.3)">Ranked candidates</span>
-            <span class="pill" style="background:var(--purple-d);color:var(--purple);border-color:rgba(210,168,255,.3)">Vietnamese output</span>
+          <h3 style="color:var(--gold)">AI Classification — GPT-4o Analysis</h3>
+          <p>For a full classification analysis, the AI tool accepts a product name, description, material, and intended use — then runs a Retrieval-Augmented Generation (RAG) pipeline. It retrieves the most relevant legal context from BM25 and semantic search, then asks GPT-4o-mini to produce a ranked list of HS code candidates with explicit, cited reasoning in Vietnamese.</p>
+          <div class="pill-row">
+            <span class="pill pill-gold">RAG pipeline</span>
+            <span class="pill pill-gold">Bilingual query expansion</span>
+            <span class="pill pill-gold">Cited reasoning</span>
+            <span class="pill pill-gold">Ranked candidates</span>
           </div>
         </div>
         <div class="layer-speed">
-          <span class="speed-chip">~15–30s</span>
-          <span style="font-size:0.68rem;color:var(--muted)">full analysis</span>
+          <span class="speed-val" style="color:var(--gold)">~15–30s</span>
+          <span class="speed-lbl">full analysis</span>
         </div>
       </div>
     </div>
 
-    <div class="divider"></div>
+    <div class="rule reveal"></div>
 
-    <h3 style="margin-bottom:1.5rem">AI Classification — How It Works</h3>
-    <div class="diagram-wrap">
+    <h3 style="margin-bottom:1.5rem" class="reveal">AI Classification — How It Works</h3>
+    <div class="diagram-wrap reveal">
+      <div class="diagram-label">Fig 02 — AI Classification Sequence</div>
       <div class="mermaid">
 sequenceDiagram
     participant U as 👤 User
@@ -699,69 +858,70 @@ sequenceDiagram
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════ FEATURES -->
+<!-- ══════════════════════════════════════ 05 — FEATURES -->
 <section id="features">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header reveal">
       <div class="section-label">05 — Core Features</div>
       <h2>Everything a Customs Professional<br>Needs in One Place</h2>
     </div>
 
-    <div class="card-grid card-grid-2">
-      <div class="card feature-card">
-        <span class="feature-tag" style="background:var(--green-d);color:var(--green)">INSTANT</span>
-        <h3>🔍 Keyword Search</h3>
-        <p>Search by product name in Vietnamese or English. Results appear instantly with matching HS codes ranked by relevance, each showing the full classification hierarchy (chapter → heading → subheading).</p>
+    <div class="card-grid card-grid-2 reveal">
+      <div class="card" style="padding:1.5rem">
+        <span class="ftag ftag-teal">Instant</span>
+        <h3>Keyword Search</h3>
+        <p style="font-size:.85rem;margin-top:.35rem">Search by product name in Vietnamese or English. Results appear instantly with matching HS codes ranked by relevance, each showing the full classification hierarchy (chapter → heading → subheading).</p>
       </div>
-      <div class="card feature-card">
-        <span class="feature-tag" style="background:var(--blue-d);color:var(--blue)">SMART</span>
-        <h3>📖 Explanatory Note Viewer</h3>
-        <p>Browse the complete WCO Explanatory Notes and Vietnam Supplementary Notes per chapter or heading. Includes tables, images, chemical formulas, and scope descriptions — the same materials customs authorities use.</p>
+      <div class="card" style="padding:1.5rem">
+        <span class="ftag ftag-indigo">Smart</span>
+        <h3>Explanatory Note Viewer</h3>
+        <p style="font-size:.85rem;margin-top:.35rem">Browse the complete WCO Explanatory Notes and Vietnam Supplementary Notes per chapter or heading. Includes tables, images, chemical formulas, and scope descriptions — the same materials customs authorities use.</p>
       </div>
-      <div class="card feature-card">
-        <span class="feature-tag" style="background:var(--purple-d);color:var(--purple)">AI</span>
-        <h3>🤖 AI Classification</h3>
-        <p>Submit a detailed product description and receive a structured classification analysis: ranked HS code candidates, step-by-step reasoning citing the relevant legal text, and confidence indicators — all in Vietnamese.</p>
+      <div class="card" style="padding:1.5rem">
+        <span class="ftag ftag-gold">AI</span>
+        <h3>AI Classification</h3>
+        <p style="font-size:.85rem;margin-top:.35rem">Submit a detailed product description and receive a structured classification analysis: ranked HS code candidates, step-by-step reasoning citing the relevant legal text, and confidence indicators — all in Vietnamese.</p>
       </div>
-      <div class="card feature-card">
-        <span class="feature-tag" style="background:var(--orange-d);color:var(--orange)">LIVE</span>
-        <h3>⚖️ Classification Rulings Browser</h3>
-        <p>Browse and search the full catalogue of official TCHQ/CHQ classification rulings. Each ruling links to the original government document and shows the HS code assigned to the specific product. Updated automatically.</p>
+      <div class="card" style="padding:1.5rem">
+        <span class="ftag ftag-green">Live</span>
+        <h3>Classification Rulings Browser</h3>
+        <p style="font-size:.85rem;margin-top:.35rem">Browse and search the full catalogue of official TCHQ/CHQ classification rulings. Each ruling links to the original government document and shows the HS code assigned to the specific product. Updated automatically.</p>
       </div>
-      <div class="card feature-card">
-        <span class="feature-tag" style="background:var(--blue-d);color:var(--blue)">REFERENCE</span>
-        <h3>🗂️ Tariff Schedule Lookup</h3>
-        <p>Direct lookup of any HS code. View the full tariff structure — MFN rate, VAT rate, applicable notes, and parent/child code relationships. Useful for verifying specific codes or exploring related headings.</p>
+      <div class="card" style="padding:1.5rem">
+        <span class="ftag ftag-teal">Reference</span>
+        <h3>Tariff Schedule Lookup</h3>
+        <p style="font-size:.85rem;margin-top:.35rem">Direct lookup of any HS code. View the full tariff structure — MFN rate, VAT rate, applicable notes, and parent/child code relationships. Useful for verifying specific codes or exploring related headings.</p>
       </div>
-      <div class="card feature-card">
-        <span class="feature-tag" style="background:var(--green-d);color:var(--green)">REFERENCE</span>
-        <h3>📐 GRI Rules Guide</h3>
-        <p>Interactive guide to the General Rules for Interpretation (GRI) — the six rules that govern how every classification decision must be made. Essential reference for proper classification methodology.</p>
+      <div class="card" style="padding:1.5rem">
+        <span class="ftag ftag-teal">Reference</span>
+        <h3>GRI Rules Guide</h3>
+        <p style="font-size:.85rem;margin-top:.35rem">Interactive guide to the General Rules for Interpretation (GRI) — the six rules that govern how every classification decision must be made. Essential reference for proper classification methodology.</p>
       </div>
-      <div class="card feature-card">
-        <span class="feature-tag" style="background:var(--purple-d);color:var(--purple)">ENTERPRISE</span>
-        <h3>🔌 Search API</h3>
-        <p>A standalone BM25 search API (hstc-api) that powers the AI pipeline and is available for integration with external systems — ERP platforms, customs declaration software, and procurement tools.</p>
+      <div class="card" style="padding:1.5rem">
+        <span class="ftag ftag-indigo">Enterprise</span>
+        <h3>Search API</h3>
+        <p style="font-size:.85rem;margin-top:.35rem">A standalone BM25 search API (hstc-api) that powers the AI pipeline and is available for integration with external systems — ERP platforms, customs declaration software, and procurement tools.</p>
       </div>
-      <div class="card feature-card">
-        <span class="feature-tag" style="background:var(--orange-d);color:var(--orange)">CONTENT</span>
-        <h3>📰 Articles &amp; News</h3>
-        <p>Published articles on customs classification topics, regulatory updates, and practical guidance. Managed through a built-in CMS with an admin panel for publishing and editing content.</p>
+      <div class="card" style="padding:1.5rem">
+        <span class="ftag ftag-gold">Content</span>
+        <h3>Articles &amp; News</h3>
+        <p style="font-size:.85rem;margin-top:.35rem">Published articles on customs classification topics, regulatory updates, and practical guidance. Managed through a built-in CMS with an admin panel for publishing and editing content.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════ WORKFLOW -->
+<!-- ══════════════════════════════════════ 06 — WORKFLOW -->
 <section id="workflow">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header reveal">
       <div class="section-label">06 — User Workflow</div>
       <h2>From Product Description<br>to Defensible Classification</h2>
       <p>A typical classification workflow — from initial question to final code selection with documented evidence.</p>
     </div>
 
-    <div class="diagram-wrap" style="overflow-x:auto">
+    <div class="diagram-wrap reveal" style="overflow-x:auto">
+      <div class="diagram-label">Fig 03 — Classification Decision Flow</div>
       <div class="mermaid" style="min-width:600px">
 %%{init: {'theme':'dark','themeVariables':{'fontSize':'16px','fontFamily':'system-ui,sans-serif'},'flowchart':{'nodeSpacing':50,'rankSpacing':60,'curve':'basis'}}}%%
 flowchart TD
@@ -801,59 +961,50 @@ flowchart TD
       </div>
     </div>
 
-    <div class="divider"></div>
+    <div class="rule reveal"></div>
 
-    <h3 style="margin-bottom:1.5rem">Step-by-Step: AI Classification in Action</h3>
-    <div style="display:flex;flex-wrap:wrap;gap:0.75rem">
-      <div class="card" style="flex:1;min-width:220px;padding:1.25rem">
-        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem">
-          <div style="width:28px;height:28px;border-radius:50%;background:var(--purple-d);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0">1</div>
-          <h4>Describe the Product</h4>
-        </div>
-        <p style="font-size:0.82rem">Enter product name, full description, material composition, and intended use. More detail = better accuracy.</p>
+    <h3 style="margin-bottom:1.2rem" class="reveal">Step-by-Step: AI Classification in Action</h3>
+    <div class="psteps reveal">
+      <div class="pstep">
+        <span class="pstep-num">STEP 01</span>
+        <h4>Describe the Product</h4>
+        <p>Enter product name, full description, material composition, and intended use. More detail = better accuracy.</p>
       </div>
-      <div class="card" style="flex:1;min-width:220px;padding:1.25rem">
-        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem">
-          <div style="width:28px;height:28px;border-radius:50%;background:var(--purple-d);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0">2</div>
-          <h4>AI Expands the Query</h4>
-        </div>
-        <p style="font-size:0.82rem">GPT generates bilingual technical search terms (Vietnamese + English) to maximize coverage across all legal sources.</p>
+      <div class="pstep">
+        <span class="pstep-num">STEP 02</span>
+        <h4>AI Expands the Query</h4>
+        <p>GPT generates bilingual technical search terms (Vietnamese + English) to maximize coverage across all legal sources.</p>
       </div>
-      <div class="card" style="flex:1;min-width:220px;padding:1.25rem">
-        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem">
-          <div style="width:28px;height:28px;border-radius:50%;background:var(--purple-d);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0">3</div>
-          <h4>Retrieve Legal Context</h4>
-        </div>
-        <p style="font-size:0.82rem">BM25 + semantic search retrieves the most relevant tariff headings, Explanatory Note excerpts, and prior rulings.</p>
+      <div class="pstep">
+        <span class="pstep-num">STEP 03</span>
+        <h4>Retrieve Legal Context</h4>
+        <p>BM25 + semantic search retrieves the most relevant tariff headings, Explanatory Note excerpts, and prior rulings.</p>
       </div>
-      <div class="card" style="flex:1;min-width:220px;padding:1.25rem">
-        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem">
-          <div style="width:28px;height:28px;border-radius:50%;background:var(--purple-d);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0">4</div>
-          <h4>AI Classifies with Citations</h4>
-        </div>
-        <p style="font-size:0.82rem">GPT-4o-mini analyzes the product against retrieved legal context, applies GRI rules, and outputs ranked HS codes with explicit citations.</p>
+      <div class="pstep">
+        <span class="pstep-num">STEP 04</span>
+        <h4>AI Classifies with Citations</h4>
+        <p>GPT-4o-mini analyzes the product against retrieved legal context, applies GRI rules, and outputs ranked HS codes with explicit citations.</p>
       </div>
-      <div class="card" style="flex:1;min-width:220px;padding:1.25rem">
-        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem">
-          <div style="width:28px;height:28px;border-radius:50%;background:var(--green-d);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0">5</div>
-          <h4>Professional Reviews</h4>
-        </div>
-        <p style="font-size:0.82rem">The qualified team member reviews the AI recommendation, reads the cited evidence, and makes the final classification decision.</p>
+      <div class="pstep">
+        <span class="pstep-num">STEP 05</span>
+        <h4>Professional Reviews</h4>
+        <p>The qualified team member reviews the AI recommendation, reads the cited evidence, and makes the final classification decision.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════ INTERNAL TOOL -->
+<!-- ══════════════════════════════════════ 07 — INTERNAL TOOL -->
 <section id="internal">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header reveal">
       <div class="section-label">07 — Internal Tool Value</div>
       <h2>How HSTC Adds Value as an<br>Internal Company Resource</h2>
       <p>For companies that regularly handle import/export operations, HS code classification is a daily operational requirement. HSTC can serve as the company's centralized classification intelligence platform.</p>
     </div>
 
-    <div class="diagram-wrap" style="margin-bottom:2.5rem">
+    <div class="diagram-wrap reveal" style="margin-bottom:2.5rem">
+      <div class="diagram-label">Fig 04 — Before vs. After Process Comparison</div>
       <div class="mermaid">
 flowchart LR
     subgraph BEFORE["❌ Without HSTC — Manual Process"]
@@ -876,176 +1027,173 @@ flowchart LR
       </div>
     </div>
 
-    <h3 style="margin-bottom:1.2rem">Before vs. After Comparison</h3>
-    <div style="overflow-x:auto">
-      <table class="comparison-table">
+    <h3 style="margin-bottom:1.2rem" class="reveal">Before vs. After Comparison</h3>
+    <div style="overflow-x:auto" class="reveal">
+      <table class="ctable">
         <thead>
           <tr>
             <th>Workflow Element</th>
-            <th>❌ Manual (Current)</th>
-            <th>✅ With HSTC</th>
+            <th>Without HSTC — Manual</th>
+            <th>With HSTC — Assisted</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td><strong>Initial research</strong></td>
-            <td class="before">15–30 min browsing PDFs, websites</td>
-            <td class="after">&lt;30 seconds — keyword search + BM25 results</td>
+            <td class="bad">15–30 min browsing PDFs, websites</td>
+            <td class="good">&lt;30 seconds — keyword search + BM25 results</td>
           </tr>
           <tr>
             <td><strong>Explanatory Note access</strong></td>
-            <td class="before">Physical binders or separate website, chapter-by-chapter</td>
-            <td class="after">Inline with search results, directly linked to heading</td>
+            <td class="bad">Physical binders or separate website, chapter-by-chapter</td>
+            <td class="good">Inline with search results, directly linked to heading</td>
           </tr>
           <tr>
             <td><strong>Ruling lookup</strong></td>
-            <td class="before">Manual check of TCHQ/CHQ website, easy to miss recent ones</td>
-            <td class="after">Automatic — rulings appear alongside tariff results</td>
+            <td class="bad">Manual check of TCHQ/CHQ website, easy to miss recent ones</td>
+            <td class="good">Automatic — rulings appear alongside tariff results</td>
           </tr>
           <tr>
             <td><strong>Complex/unfamiliar products</strong></td>
-            <td class="before">30–60 min senior consultation or outsource to consultant</td>
-            <td class="after">15–30 sec AI classification with cited legal reasoning</td>
+            <td class="bad">30–60 min senior consultation or outsource to consultant</td>
+            <td class="good">15–30 sec AI classification with cited legal reasoning</td>
           </tr>
           <tr>
             <td><strong>Classification consistency</strong></td>
-            <td class="before">Varies by staff member's experience level</td>
-            <td class="after">Standardized — same legal evidence surface for all users</td>
+            <td class="bad">Varies by staff member's experience level</td>
+            <td class="good">Standardized — same legal evidence surface for all users</td>
           </tr>
           <tr>
             <td><strong>Audit trail</strong></td>
-            <td class="before">None — verbal or informal notes at best</td>
-            <td class="after">AI classification logs retained; legal sources cited</td>
+            <td class="bad">None — verbal or informal notes at best</td>
+            <td class="good">AI classification logs retained; legal sources cited</td>
           </tr>
           <tr>
             <td><strong>Knowledge retention</strong></td>
-            <td class="before">Dependent on individual staff — lost when staff leave</td>
-            <td class="after">Knowledge base is the platform — institutional, persistent</td>
+            <td class="bad">Dependent on individual staff — lost when staff leave</td>
+            <td class="good">Knowledge base is the platform — institutional, persistent</td>
           </tr>
           <tr>
             <td><strong>Staying current with rulings</strong></td>
-            <td class="before">Manual monitoring required — most companies fall behind</td>
-            <td class="after">Automatic crawling — rulings indexed within hours of publication</td>
+            <td class="bad">Manual monitoring required — most companies fall behind</td>
+            <td class="good">Automatic crawling — rulings indexed within hours of publication</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div class="divider"></div>
+    <div class="rule reveal"></div>
 
-    <h3 style="margin-bottom:1.2rem">Business Value Metrics</h3>
-    <div class="card-grid card-grid-4">
+    <h3 style="margin-bottom:1.2rem" class="reveal">Business Value Metrics</h3>
+    <div class="card-grid card-grid-4 reveal">
       <div class="card metric-card">
-        <div class="metric-num" style="color:var(--green)">10×</div>
-        <div class="metric-label">Faster initial research for known product categories</div>
+        <div class="metric-num" style="color:var(--teal)">10×</div>
+        <div class="metric-lbl">Faster initial research for known product categories</div>
       </div>
       <div class="card metric-card">
-        <div class="metric-num" style="color:var(--blue)">↓ 60%</div>
-        <div class="metric-label">Reduction in time-to-answer for classification queries</div>
+        <div class="metric-num" style="color:var(--indigo)">↓ 60%</div>
+        <div class="metric-lbl">Reduction in time-to-answer for classification queries</div>
       </div>
       <div class="card metric-card">
-        <div class="metric-num" style="color:var(--orange)">100%</div>
-        <div class="metric-label">Coverage of official legal sources in one place</div>
+        <div class="metric-num" style="color:var(--gold)">100%</div>
+        <div class="metric-lbl">Coverage of official legal sources in one place</div>
       </div>
       <div class="card metric-card">
-        <div class="metric-num" style="color:var(--purple)">0</div>
-        <div class="metric-label">Cost per keyword search query (fully self-hosted data)</div>
+        <div class="metric-num" style="color:var(--green)">$0</div>
+        <div class="metric-lbl">Cost per keyword search query (fully self-hosted data)</div>
       </div>
     </div>
 
-    <div class="divider"></div>
+    <div class="rule reveal"></div>
 
-    <h3 style="margin-bottom:1.2rem">Departments That Benefit</h3>
-    <div class="card-grid card-grid-3">
-      <div class="card" style="padding:1.25rem">
-        <div style="font-size:1.3rem;margin-bottom:0.5rem">🏭</div>
+    <h3 style="margin-bottom:1.2rem" class="reveal">Departments That Benefit</h3>
+    <div class="card-grid card-grid-3 reveal">
+      <div class="card dept-card">
+        <span class="dept-icon">🏭</span>
         <h3>Import/Export Operations</h3>
-        <p style="font-size:0.85rem">Daily classification of goods for customs declarations. Reduces per-declaration research time significantly. Consistent codes across recurring shipments.</p>
+        <p style="font-size:.84rem;margin-top:.35rem">Daily classification of goods for customs declarations. Reduces per-declaration research time significantly. Consistent codes across recurring shipments.</p>
       </div>
-      <div class="card" style="padding:1.25rem">
-        <div style="font-size:1.3rem;margin-bottom:0.5rem">⚖️</div>
+      <div class="card dept-card">
+        <span class="dept-icon">⚖️</span>
         <h3>Compliance &amp; Legal</h3>
-        <p style="font-size:0.85rem">Pre-submission review of classifications with documented evidence. Preparation for customs audits with citation-backed decisions. Ruling monitoring for product portfolio.</p>
+        <p style="font-size:.84rem;margin-top:.35rem">Pre-submission review with documented evidence. Preparation for customs audits with citation-backed decisions. Ruling monitoring for product portfolio.</p>
       </div>
-      <div class="card" style="padding:1.25rem">
-        <div style="font-size:1.3rem;margin-bottom:0.5rem">💰</div>
+      <div class="card dept-card">
+        <span class="dept-icon">💰</span>
         <h3>Finance &amp; Procurement</h3>
-        <p style="font-size:0.85rem">Early-stage tariff estimation for procurement planning. FTA preferential rate discovery. Landed cost modeling with accurate HS-based duty rates.</p>
+        <p style="font-size:.84rem;margin-top:.35rem">Early-stage tariff estimation for procurement planning. FTA preferential rate discovery. Landed cost modeling with accurate HS-based duty rates.</p>
       </div>
-      <div class="card" style="padding:1.25rem">
-        <div style="font-size:1.3rem;margin-bottom:0.5rem">🛍️</div>
+      <div class="card dept-card">
+        <span class="dept-icon">🛍️</span>
         <h3>Product Development</h3>
-        <p style="font-size:0.85rem">Classification screening during product design phase. Understanding regulatory requirements triggered by specific HS codes before launch. Pre-launch compliance review.</p>
+        <p style="font-size:.84rem;margin-top:.35rem">Classification screening during product design phase. Understanding regulatory requirements triggered by specific HS codes before launch.</p>
       </div>
-      <div class="card" style="padding:1.25rem">
-        <div style="font-size:1.3rem;margin-bottom:0.5rem">📊</div>
+      <div class="card dept-card">
+        <span class="dept-icon">📊</span>
         <h3>Management &amp; Strategy</h3>
-        <p style="font-size:0.85rem">Portfolio-level classification review. FTA optimization analysis. Risk assessment for product lines subject to tariff changes or regulatory controls.</p>
+        <p style="font-size:.84rem;margin-top:.35rem">Portfolio-level classification review. FTA optimization analysis. Risk assessment for product lines subject to tariff changes or regulatory controls.</p>
       </div>
-      <div class="card" style="padding:1.25rem">
-        <div style="font-size:1.3rem;margin-bottom:0.5rem">🤝</div>
+      <div class="card dept-card">
+        <span class="dept-icon">🤝</span>
         <h3>External Relations</h3>
-        <p style="font-size:0.85rem">Supporting customs broker communications with pre-researched classifications. Responding to customs authority queries with cited legal evidence. Dispute resolution preparation.</p>
+        <p style="font-size:.84rem;margin-top:.35rem">Supporting customs broker communications with pre-researched classifications. Responding to customs authority queries with cited legal evidence.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════ SCALE-UP -->
+<!-- ══════════════════════════════════════ 08 — SCALE-UP -->
 <section id="scale">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header reveal">
       <div class="section-label">08 — Growth Potential</div>
       <h2>Scale-Up Potential for<br>Customs Consultant Services</h2>
       <p>Beyond internal use, HSTC is architected to serve as the backbone of a professional customs classification consulting service — or to be offered as a value-added tool to the company's clients.</p>
     </div>
 
-    <div class="card-grid card-grid-2" style="margin-bottom:2.5rem">
-      <div class="card" style="border-left:3px solid var(--blue)">
-        <div class="card-icon icon-blue">🔌</div>
+    <div class="card-grid card-grid-2 card-grid-sep reveal" style="margin-bottom:2.5rem">
+      <div class="card card-teal" style="padding:1.5rem">
         <h3>Search API for System Integration</h3>
-        <p>The standalone BM25 search API (hstc-api) can be integrated with clients' ERP systems, warehouse management systems, and customs declaration software. This enables automated HS code suggestion at the point of product data entry — reducing manual classification overhead for high-volume operations.</p>
-        <div class="pill-list">
-          <span class="pill">REST API</span>
-          <span class="pill">ERP Integration</span>
+        <p style="font-size:.85rem;margin-top:.4rem">The standalone BM25 search API (hstc-api) can be integrated with clients' ERP systems, warehouse management systems, and customs declaration software. This enables automated HS code suggestion at the point of product data entry.</p>
+        <div class="pill-row">
+          <span class="pill pill-teal">REST API</span>
+          <span class="pill pill-teal">ERP Integration</span>
           <span class="pill">Customs Software</span>
           <span class="pill">WMS Integration</span>
         </div>
       </div>
-      <div class="card" style="border-left:3px solid var(--green)">
-        <div class="card-icon icon-green">👥</div>
+      <div class="card card-green" style="padding:1.5rem">
         <h3>Multi-Client &amp; Multi-Tenant Support</h3>
-        <p>The platform architecture supports adding authentication, organizational accounts, and per-client usage quotas. A customs consulting firm could offer HSTC access as a value-added service to its clients, with each client getting their own workspace, usage tracking, and saved classification history.</p>
-        <div class="pill-list">
-          <span class="pill">Auth System</span>
-          <span class="pill">Per-Client Quotas</span>
+        <p style="font-size:.85rem;margin-top:.4rem">The platform architecture supports adding authentication, organizational accounts, and per-client usage quotas. A customs consulting firm could offer HSTC access as a value-added service to its clients, with each client getting their own workspace.</p>
+        <div class="pill-row">
+          <span class="pill pill-green">Auth System</span>
+          <span class="pill pill-green">Per-Client Quotas</span>
           <span class="pill">Usage Analytics</span>
           <span class="pill">White-Label Ready</span>
         </div>
       </div>
-      <div class="card" style="border-left:3px solid var(--orange)">
-        <div class="card-icon icon-orange">🎓</div>
+      <div class="card card-gold" style="padding:1.5rem">
         <h3>Classification Advisory Services</h3>
-        <p>The platform can be positioned as a co-pilot for customs consultants. Consultants use HSTC for rapid first-pass analysis, then add professional value through review, client communication, and formal ruling applications. HSTC makes consultants faster without replacing their expertise.</p>
-        <div class="pill-list">
-          <span class="pill">Consultant Productivity</span>
-          <span class="pill">Client Reporting</span>
+        <p style="font-size:.85rem;margin-top:.4rem">The platform can be positioned as a co-pilot for customs consultants. Consultants use HSTC for rapid first-pass analysis, then add professional value through review, client communication, and formal ruling applications.</p>
+        <div class="pill-row">
+          <span class="pill pill-gold">Consultant Productivity</span>
+          <span class="pill pill-gold">Client Reporting</span>
           <span class="pill">Ruling Applications</span>
         </div>
       </div>
-      <div class="card" style="border-left:3px solid var(--purple)">
-        <div class="card-icon icon-purple">📈</div>
+      <div class="card card-indigo" style="padding:1.5rem">
         <h3>Data &amp; Analytics Products</h3>
-        <p>Aggregated (anonymized) classification query data reveals patterns in what products companies are trying to classify. This market intelligence — about import/export trends, new product categories, and classification bottlenecks — is valuable for trade intelligence and advisory services.</p>
-        <div class="pill-list">
-          <span class="pill">Query Analytics</span>
-          <span class="pill">Trend Intelligence</span>
+        <p style="font-size:.85rem;margin-top:.4rem">Aggregated (anonymized) classification query data reveals patterns in what products companies are trying to classify. This market intelligence is valuable for trade advisory and import/export trend reporting.</p>
+        <div class="pill-row">
+          <span class="pill pill-indigo">Query Analytics</span>
+          <span class="pill pill-indigo">Trend Intelligence</span>
           <span class="pill">Classification Reports</span>
         </div>
       </div>
     </div>
 
-    <div class="diagram-wrap">
+    <div class="diagram-wrap reveal">
+      <div class="diagram-label">Fig 05 — Platform Growth Architecture</div>
       <div class="mermaid">
 flowchart TB
     subgraph CORE["🏢 Core Platform (Today)"]
@@ -1080,48 +1228,49 @@ flowchart TB
       </div>
     </div>
 
-    <div class="divider"></div>
+    <div class="rule reveal"></div>
 
-    <h3 style="margin-bottom:1.2rem">Competitive Advantages for Scale</h3>
-    <div class="card-grid card-grid-3">
-      <div class="card" style="padding:1.25rem">
-        <h4 style="color:var(--blue);margin-bottom:0.5rem">🇻🇳 Vietnam-First</h4>
-        <p style="font-size:0.85rem">Built specifically for Vietnam's tariff schedule, legal system, and language. Vietnamese diacritics handling, Vietnamese legal documents, Vietnamese AI output — not a generic global tool adapted for Vietnam.</p>
+    <h3 style="margin-bottom:1.2rem" class="reveal">Competitive Advantages for Scale</h3>
+    <div class="card-grid card-grid-3 reveal">
+      <div class="card" style="padding:1.4rem">
+        <h4 style="color:var(--teal);margin-bottom:.4rem">Vietnam-First</h4>
+        <p style="font-size:.84rem">Built specifically for Vietnam's tariff schedule, legal system, and language. Vietnamese diacritics handling, Vietnamese legal documents, Vietnamese AI output — not a generic global tool adapted for Vietnam.</p>
       </div>
-      <div class="card" style="padding:1.25rem">
-        <h4 style="color:var(--green);margin-bottom:0.5rem">⚡ Production-Ready</h4>
-        <p style="font-size:0.85rem">Already live at tracuuhs.com. Not a prototype — production infrastructure with real users, security controls, rate limiting, and analytics. Available to integrate today.</p>
+      <div class="card" style="padding:1.4rem">
+        <h4 style="color:var(--green);margin-bottom:.4rem">Production-Ready</h4>
+        <p style="font-size:.84rem">Already live at tracuuhs.com. Not a prototype — production infrastructure with real users, security controls, rate limiting, and analytics. Available to integrate today.</p>
       </div>
-      <div class="card" style="padding:1.25rem">
-        <h4 style="color:var(--orange);margin-bottom:0.5rem">📚 Deep Legal Coverage</h4>
-        <p style="font-size:0.85rem">Four official data sources indexed, including classification rulings that are automatically kept current. No competitor combines all four sources with AI classification in one interface.</p>
+      <div class="card" style="padding:1.4rem">
+        <h4 style="color:var(--gold);margin-bottom:.4rem">Deep Legal Coverage</h4>
+        <p style="font-size:.84rem">Four official data sources indexed, including classification rulings that are automatically kept current. No competitor combines all four sources with AI classification in one interface.</p>
       </div>
-      <div class="card" style="padding:1.25rem">
-        <h4 style="color:var(--purple);margin-bottom:0.5rem">💰 Low Marginal Cost</h4>
-        <p style="font-size:0.85rem">Keyword search has near-zero cost per query (client-side computation). AI classification costs ~$0.003 per query (GPT-4o-mini). Infrastructure scales cost-effectively with usage on serverless architecture.</p>
+      <div class="card" style="padding:1.4rem">
+        <h4 style="color:var(--indigo);margin-bottom:.4rem">Low Marginal Cost</h4>
+        <p style="font-size:.84rem">Keyword search has near-zero cost per query (client-side computation). AI classification costs ~$0.003 per query (GPT-4o-mini). Infrastructure scales cost-effectively on serverless architecture.</p>
       </div>
-      <div class="card" style="padding:1.25rem">
-        <h4 style="color:var(--blue);margin-bottom:0.5rem">🔒 Transparent &amp; Auditable</h4>
-        <p style="font-size:0.85rem">AI results cite their legal sources explicitly. Classifications are auditable — users can follow the cited EN/SEN text to verify the AI's reasoning. This is critical for regulatory compliance and dispute defense.</p>
+      <div class="card" style="padding:1.4rem">
+        <h4 style="color:var(--teal);margin-bottom:.4rem">Transparent &amp; Auditable</h4>
+        <p style="font-size:.84rem">AI results cite their legal sources explicitly. Classifications are auditable — users can follow the cited EN/SEN text to verify the AI's reasoning. Critical for regulatory compliance.</p>
       </div>
-      <div class="card" style="padding:1.25rem">
-        <h4 style="color:var(--green);margin-bottom:0.5rem">🧩 API-First Architecture</h4>
-        <p style="font-size:0.85rem">Standalone search API already exists and is used internally. Expanding access to enterprise clients or integrating with third-party systems requires configuration, not new engineering.</p>
+      <div class="card" style="padding:1.4rem">
+        <h4 style="color:var(--green);margin-bottom:.4rem">API-First Architecture</h4>
+        <p style="font-size:.84rem">Standalone search API already exists and is used internally. Expanding access to enterprise clients or integrating with third-party systems requires configuration, not new engineering.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════ TECHNOLOGY -->
+<!-- ══════════════════════════════════════ 09 — TECHNOLOGY -->
 <section id="tech">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header reveal">
       <div class="section-label">09 — Technology</div>
       <h2>Modern, Cloud-Native Infrastructure<br>Built for Reliability &amp; Scale</h2>
       <p>HSTC uses a modern serverless stack — no dedicated servers to manage, automatic scaling, enterprise-grade security, and globally distributed delivery.</p>
     </div>
 
-    <div class="diagram-wrap">
+    <div class="diagram-wrap reveal">
+      <div class="diagram-label">Fig 06 — Infrastructure Architecture</div>
       <div class="mermaid">
 flowchart LR
     subgraph CDN["🌐 Content Delivery (Global CDN)"]
@@ -1162,83 +1311,47 @@ flowchart LR
       </div>
     </div>
 
-    <div class="divider"></div>
+    <div class="rule reveal"></div>
 
-    <h3 style="margin-bottom:1.2rem">Technology Stack</h3>
-    <div class="stack-row">
-      <div class="stack-item">
-        <span class="si-icon">⚛️</span>
-        <span class="si-name">React</span>
-        <span class="si-role">UI Framework</span>
-      </div>
-      <div class="stack-item">
-        <span class="si-icon">🟦</span>
-        <span class="si-name">TypeScript</span>
-        <span class="si-role">Type Safety</span>
-      </div>
-      <div class="stack-item">
-        <span class="si-icon">⚡</span>
-        <span class="si-name">Vite</span>
-        <span class="si-role">Build Tool</span>
-      </div>
-      <div class="stack-item">
-        <span class="si-icon">🗄️</span>
-        <span class="si-name">Supabase</span>
-        <span class="si-role">Database + Auth</span>
-      </div>
-      <div class="stack-item">
-        <span class="si-icon">🐘</span>
-        <span class="si-name">PostgreSQL</span>
-        <span class="si-role">Data Storage</span>
-      </div>
-      <div class="stack-item">
-        <span class="si-icon">🤖</span>
-        <span class="si-name">GPT-4o-mini</span>
-        <span class="si-role">AI Engine</span>
-      </div>
-      <div class="stack-item">
-        <span class="si-icon">📐</span>
-        <span class="si-name">OpenAI Emb.</span>
-        <span class="si-role">Semantic Search</span>
-      </div>
-      <div class="stack-item">
-        <span class="si-icon">🌐</span>
-        <span class="si-name">Global CDN</span>
-        <span class="si-role">Delivery</span>
-      </div>
-      <div class="stack-item">
-        <span class="si-icon">🔒</span>
-        <span class="si-name">Row-Level Sec.</span>
-        <span class="si-role">Data Security</span>
-      </div>
+    <h3 style="margin-bottom:1.2rem" class="reveal">Technology Stack</h3>
+    <div class="stack-grid reveal">
+      <div class="stack-item"><span class="si-icon">⚛️</span><span class="si-name">React</span><span class="si-role">UI Framework</span></div>
+      <div class="stack-item"><span class="si-icon">🟦</span><span class="si-name">TypeScript</span><span class="si-role">Type Safety</span></div>
+      <div class="stack-item"><span class="si-icon">⚡</span><span class="si-name">Vite</span><span class="si-role">Build Tool</span></div>
+      <div class="stack-item"><span class="si-icon">🗄️</span><span class="si-name">Supabase</span><span class="si-role">Database + Auth</span></div>
+      <div class="stack-item"><span class="si-icon">🐘</span><span class="si-name">PostgreSQL</span><span class="si-role">Data Storage</span></div>
+      <div class="stack-item"><span class="si-icon">🤖</span><span class="si-name">GPT-4o-mini</span><span class="si-role">AI Engine</span></div>
+      <div class="stack-item"><span class="si-icon">📐</span><span class="si-name">OpenAI Emb.</span><span class="si-role">Semantic Search</span></div>
+      <div class="stack-item"><span class="si-icon">🌐</span><span class="si-name">Global CDN</span><span class="si-role">Delivery</span></div>
+      <div class="stack-item"><span class="si-icon">🔒</span><span class="si-name">Row-Level Sec.</span><span class="si-role">Data Security</span></div>
     </div>
 
-    <div class="divider"></div>
+    <div class="rule reveal"></div>
 
-    <div class="card-grid card-grid-3">
-      <div class="card" style="padding:1.25rem">
-        <h4 style="color:var(--green);margin-bottom:0.5rem">🔒 Security</h4>
-        <ul style="font-size:0.85rem;color:var(--muted);padding-left:1.2rem;margin-top:0.4rem">
+    <div class="card-grid card-grid-3 reveal">
+      <div class="card" style="padding:1.4rem">
+        <h4 style="color:var(--green);margin-bottom:.5rem">Security</h4>
+        <ul style="font-size:.84rem;color:var(--muted);padding-left:1.1rem;margin-top:.35rem;line-height:1.9">
           <li>Row-level security on all database tables</li>
           <li>SHA-256 IP hashing for rate limiting (no PII storage)</li>
           <li>HTTPS everywhere — edge functions, API, CDN</li>
           <li>Admin panel with authenticated access only</li>
         </ul>
       </div>
-      <div class="card" style="padding:1.25rem">
-        <h4 style="color:var(--blue);margin-bottom:0.5rem">📈 Scalability</h4>
-        <ul style="font-size:0.85rem;color:var(--muted);padding-left:1.2rem;margin-top:0.4rem">
+      <div class="card" style="padding:1.4rem">
+        <h4 style="color:var(--teal);margin-bottom:.5rem">Scalability</h4>
+        <ul style="font-size:.84rem;color:var(--muted);padding-left:1.1rem;margin-top:.35rem;line-height:1.9">
           <li>Serverless edge functions auto-scale to traffic</li>
-          <li>CDN-delivered frontend — no backend needed for keyword search</li>
+          <li>CDN-delivered frontend — no backend for keyword search</li>
           <li>Managed PostgreSQL with connection pooling</li>
           <li>Client-side BM25 reduces server load</li>
         </ul>
       </div>
-      <div class="card" style="padding:1.25rem">
-        <h4 style="color:var(--orange);margin-bottom:0.5rem">🛠️ Maintainability</h4>
-        <ul style="font-size:0.85rem;color:var(--muted);padding-left:1.2rem;margin-top:0.4rem">
+      <div class="card" style="padding:1.4rem">
+        <h4 style="color:var(--gold);margin-bottom:.5rem">Maintainability</h4>
+        <ul style="font-size:.84rem;color:var(--muted);padding-left:1.1rem;margin-top:.35rem;line-height:1.9">
           <li>TypeScript throughout — type-safe, IDE-friendly</li>
-          <li>Modular architecture — features are independently deployable</li>
+          <li>Modular architecture — independently deployable features</li>
           <li>Automated ruling crawler — self-maintaining data</li>
           <li>Admin CMS for content without code changes</li>
         </ul>
@@ -1247,102 +1360,91 @@ flowchart LR
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════ ROADMAP -->
+<!-- ══════════════════════════════════════ 10 — ROADMAP -->
 <section id="roadmap">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header reveal">
       <div class="section-label">10 — Roadmap</div>
       <h2>Platform Evolution &amp;<br>Development Roadmap</h2>
       <p>The platform is built in phases — each expanding capability while maintaining reliability of the core search product.</p>
     </div>
 
-    <div class="roadmap">
-      <div class="roadmap-phase phase-live">
-        <div class="phase-marker">
-          <div class="phase-dot"></div>
-          <div class="phase-line"></div>
-        </div>
-        <div class="phase-content">
-          <div class="phase-tag">✅ Phase 1 — Live Today</div>
+    <div class="roadmap reveal">
+      <div class="rphase rphase-live">
+        <div class="rphase-dot"></div>
+        <div class="rphase-body">
+          <div class="rphase-tag">Phase 1 — Live Today</div>
           <h3>Core Platform</h3>
-          <p style="font-size:0.88rem;margin-top:0.4rem">Full-featured HS Code classification platform with all four data sources, three-layer search, AI classification, and admin CMS — live at tracuuhs.com.</p>
-          <div class="phase-items">
-            <div class="phase-item" style="color:var(--green)">Keyword search (BM25) — Vietnamese &amp; English, &lt;100ms</div>
-            <div class="phase-item" style="color:var(--green)">AI Classification — GPT-4o-mini RAG pipeline</div>
-            <div class="phase-item" style="color:var(--green)">Four official legal sources indexed and searchable</div>
-            <div class="phase-item" style="color:var(--green)">Automated TB-CHQ ruling crawler</div>
-            <div class="phase-item" style="color:var(--green)">Admin CMS for articles and content management</div>
-            <div class="phase-item" style="color:var(--green)">Semantic search with OpenAI embeddings (9,737 chunks)</div>
-            <div class="phase-item" style="color:var(--green)">AI usage analytics dashboard</div>
-            <div class="phase-item" style="color:var(--green)">GRI Rules interactive guide</div>
+          <p style="font-size:.85rem;margin-top:.35rem;color:var(--muted)">Full-featured HS Code classification platform with all four data sources, three-layer search, AI classification, and admin CMS — live at tracuuhs.com.</p>
+          <div style="margin-top:.75rem">
+            <div class="ritem">Keyword search (BM25) — Vietnamese &amp; English, &lt;100ms</div>
+            <div class="ritem">AI Classification — GPT-4o-mini RAG pipeline</div>
+            <div class="ritem">Four official legal sources indexed and searchable</div>
+            <div class="ritem">Automated TB-CHQ ruling crawler</div>
+            <div class="ritem">Admin CMS for articles and content management</div>
+            <div class="ritem">Semantic search with OpenAI embeddings (9,737 chunks)</div>
+            <div class="ritem">AI usage analytics dashboard</div>
+            <div class="ritem">GRI Rules interactive guide</div>
           </div>
         </div>
       </div>
-
-      <div class="roadmap-phase phase-next">
-        <div class="phase-marker">
-          <div class="phase-dot"></div>
-          <div class="phase-line"></div>
-        </div>
-        <div class="phase-content">
-          <div class="phase-tag">🔵 Phase 2 — Near-Term</div>
+      <div class="rphase rphase-next">
+        <div class="rphase-dot"></div>
+        <div class="rphase-body">
+          <div class="rphase-tag">Phase 2 — Near-Term</div>
           <h3>Enterprise Access &amp; UX Enhancement</h3>
-          <p style="font-size:0.88rem;margin-top:0.4rem">Adding authentication, organizational accounts, and improved user experience features to support internal deployment and multi-user usage.</p>
-          <div class="phase-items">
-            <div class="phase-item" style="color:var(--blue)">User authentication (SSO / email login)</div>
-            <div class="phase-item" style="color:var(--blue)">Saved classification history per user</div>
-            <div class="phase-item" style="color:var(--blue)">Bookmark and annotation features for HS headings</div>
-            <div class="phase-item" style="color:var(--blue)">Classification comparison tool (compare 2–3 headings side by side)</div>
-            <div class="phase-item" style="color:var(--blue)">Ruling alert subscriptions (email/webhook on new CHQ rulings for tracked HS codes)</div>
-            <div class="phase-item" style="color:var(--blue)">Expanded AI quota for authenticated users</div>
+          <p style="font-size:.85rem;margin-top:.35rem;color:var(--muted)">Adding authentication, organizational accounts, and improved user experience features to support internal deployment and multi-user usage.</p>
+          <div style="margin-top:.75rem">
+            <div class="ritem">User authentication (SSO / email login)</div>
+            <div class="ritem">Saved classification history per user</div>
+            <div class="ritem">Bookmark and annotation features for HS headings</div>
+            <div class="ritem">Classification comparison tool (compare 2–3 headings side by side)</div>
+            <div class="ritem">Ruling alert subscriptions (email/webhook on new CHQ rulings)</div>
+            <div class="ritem">Expanded AI quota for authenticated users</div>
           </div>
         </div>
       </div>
-
-      <div class="roadmap-phase phase-future">
-        <div class="phase-marker">
-          <div class="phase-dot"></div>
-          <div class="phase-line"></div>
-        </div>
-        <div class="phase-content">
-          <div class="phase-tag">🟣 Phase 3 — Enterprise Integration</div>
+      <div class="rphase rphase-future">
+        <div class="rphase-dot"></div>
+        <div class="rphase-body">
+          <div class="rphase-tag">Phase 3 — Enterprise Integration</div>
           <h3>API Products &amp; Consulting Platform</h3>
-          <p style="font-size:0.88rem;margin-top:0.4rem">Expanding to enterprise clients and customs consulting services with API access, multi-tenancy, and service integration capabilities.</p>
-          <div class="phase-items">
-            <div class="phase-item" style="color:var(--purple)">Public Search API with tiered rate limits and API keys</div>
-            <div class="phase-item" style="color:var(--purple)">Multi-tenant organizational accounts for consulting firms</div>
-            <div class="phase-item" style="color:var(--purple)">ERP/WMS connectors (SAP, Oracle, custom integrations)</div>
-            <div class="phase-item" style="color:var(--purple)">Classification batch processing (CSV upload → bulk classify)</div>
-            <div class="phase-item" style="color:var(--purple)">Client-facing classification reports (PDF export)</div>
-            <div class="phase-item" style="color:var(--purple)">White-label deployment option for consulting firm branding</div>
-            <div class="phase-item" style="color:var(--purple)">Coverage extension: ASEAN country tariff schedules</div>
+          <p style="font-size:.85rem;margin-top:.35rem;color:var(--muted)">Expanding to enterprise clients and customs consulting services with API access, multi-tenancy, and service integration capabilities.</p>
+          <div style="margin-top:.75rem">
+            <div class="ritem">Public Search API with tiered rate limits and API keys</div>
+            <div class="ritem">Multi-tenant organizational accounts for consulting firms</div>
+            <div class="ritem">ERP/WMS connectors (SAP, Oracle, custom integrations)</div>
+            <div class="ritem">Classification batch processing (CSV upload → bulk classify)</div>
+            <div class="ritem">Client-facing classification reports (PDF export)</div>
+            <div class="ritem">White-label deployment option for consulting firm branding</div>
+            <div class="ritem">Coverage extension: ASEAN country tariff schedules</div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="callout callout-blue" style="margin-top:2rem">
-      <span class="callout-icon">🎯</span>
+    <div class="callout callout-teal reveal" style="margin-top:2.5rem">
+      <span class="callout-icon">→</span>
       <div>
         <h4>Integration Path for the Company</h4>
-        <p>The recommended path for integrating HSTC as a company internal tool begins with <strong>direct access</strong> (Phase 1 — available today), then moves to <strong>authenticated accounts</strong> for the import/export and compliance teams (Phase 2), and optionally expands to <strong>client-facing services</strong> if the company wishes to offer HS code advisory as part of its consulting practice (Phase 3). Each phase builds on the last with no service interruption.</p>
+        <p>The recommended path begins with <strong>direct access</strong> (Phase 1 — available today), then moves to <strong>authenticated accounts</strong> for the import/export and compliance teams (Phase 2), and optionally expands to <strong>client-facing services</strong> if the company wishes to offer HS code advisory as part of its consulting practice (Phase 3). Each phase builds on the last with no service interruption.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════ SUMMARY -->
-<section id="summary" style="background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(63,185,80,0.06) 0%, transparent 70%)">
+<!-- ══════════════════════════════════════ SUMMARY -->
+<section id="summary">
   <div class="container">
-    <div class="section-header">
-      <div class="section-label">11 — Summary</div>
+    <div class="section-header reveal">
+      <div class="section-label">Summary</div>
       <h2>Key Takeaways for<br>Decision Makers</h2>
     </div>
 
-    <div class="card-grid card-grid-2">
-      <div class="card" style="border-left:4px solid var(--green);padding:2rem">
-        <h3 style="color:var(--green);margin-bottom:1rem">✅ What Exists Today</h3>
-        <ul style="font-size:0.88rem;color:var(--muted);padding-left:1.2rem;line-height:2">
+    <div class="card-grid card-grid-2 card-grid-sep reveal" style="margin-bottom:2rem">
+      <div class="card" style="border-left:3px solid var(--teal);padding:2rem">
+        <h3 style="color:var(--teal);margin-bottom:1rem">What Exists Today</h3>
+        <ul style="font-size:.88rem;color:var(--muted);padding-left:1.1rem;line-height:2.1">
           <li>Production-ready platform at tracuuhs.com</li>
           <li>All four official legal sources indexed and searchable</li>
           <li>Three search layers: keyword, semantic, AI</li>
@@ -1352,9 +1454,9 @@ flowchart LR
           <li>Analytics for usage monitoring</li>
         </ul>
       </div>
-      <div class="card" style="border-left:4px solid var(--blue);padding:2rem">
-        <h3 style="color:var(--blue);margin-bottom:1rem">🔵 What Can Be Added</h3>
-        <ul style="font-size:0.88rem;color:var(--muted);padding-left:1.2rem;line-height:2">
+      <div class="card" style="border-left:3px solid var(--indigo);padding:2rem">
+        <h3 style="color:var(--indigo);margin-bottom:1rem">What Can Be Added</h3>
+        <ul style="font-size:.88rem;color:var(--muted);padding-left:1.1rem;line-height:2.1">
           <li>User authentication and organizational accounts</li>
           <li>Expanded AI quotas for internal users</li>
           <li>Classification history and saved bookmarks</li>
@@ -1366,67 +1468,81 @@ flowchart LR
       </div>
     </div>
 
-    <div class="divider"></div>
-
-    <div class="card-grid card-grid-3">
-      <div class="card metric-card" style="border-top:3px solid var(--green)">
-        <div class="metric-num" style="color:var(--green);font-size:1.8rem">Available Now</div>
-        <div class="metric-label" style="margin-top:0.5rem">Platform is live and can be used by the team today — zero setup required for direct web access</div>
+    <div class="card-grid card-grid-3 reveal">
+      <div class="card metric-card" style="border-top:2px solid var(--teal)">
+        <div class="metric-num" style="font-size:1.5rem;color:var(--teal)">Available Now</div>
+        <div class="metric-lbl" style="margin-top:.6rem">Platform is live and can be used by the team today — zero setup required for direct web access</div>
       </div>
-      <div class="card metric-card" style="border-top:3px solid var(--blue)">
-        <div class="metric-num" style="color:var(--blue);font-size:1.8rem">Low Cost</div>
-        <div class="metric-label" style="margin-top:0.5rem">Infrastructure cost ~$25–50/month for current scale. AI classification adds ~$0.003 per query on top. Scales with usage.</div>
+      <div class="card metric-card" style="border-top:2px solid var(--indigo)">
+        <div class="metric-num" style="font-size:1.5rem;color:var(--indigo)">~$25–50/mo</div>
+        <div class="metric-lbl" style="margin-top:.6rem">Infrastructure cost at current scale. AI classification adds ~$0.003 per query. Scales with usage.</div>
       </div>
-      <div class="card metric-card" style="border-top:3px solid var(--purple)">
-        <div class="metric-num" style="color:var(--purple);font-size:1.8rem">Extensible</div>
-        <div class="metric-label" style="margin-top:0.5rem">API-first architecture. Authentication, multi-tenancy, and enterprise integrations are additive — no rebuild required.</div>
+      <div class="card metric-card" style="border-top:2px solid var(--gold)">
+        <div class="metric-num" style="font-size:1.5rem;color:var(--gold)">Extensible</div>
+        <div class="metric-lbl" style="margin-top:.6rem">API-first architecture. Authentication, multi-tenancy, and enterprise integrations are additive — no rebuild required.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════ FOOTER -->
+<!-- ══════════════════════════════════════ FOOTER -->
 <footer>
+  <span class="footer-logo">HSTC_</span>
+  <div class="footer-divider"></div>
   <p>
-    <strong style="color:var(--text)">HSTC — Intelligent HS Code Classification Platform</strong><br>
+    Intelligent HS Code Classification Platform ·
     Live at <a href="https://tracuuhs.com" target="_blank">tracuuhs.com</a> ·
-    Powered by React, Supabase, GPT-4o-mini ·
-    Built for Vietnam customs classification
+    Powered by React, Supabase, GPT-4o-mini
   </p>
-  <p style="margin-top:0.75rem;font-size:0.75rem">
-    This document presents the HSTC platform for internal review and business case evaluation.
-    Data sources: Vietnam Customs Authority, WCO, thuvienphapluat.vn
+  <p style="margin-top:.5rem;font-size:.72rem;opacity:.6">
+    Data sources: Vietnam Customs Authority · World Customs Organization · thuvienphapluat.vn
   </p>
 </footer>
 
 <script>
+  /* ── Mermaid ── */
   mermaid.initialize({
     startOnLoad: true,
     theme: 'dark',
     themeVariables: {
       darkMode: true,
-      background: '#0d1117',
-      primaryColor: '#1f4068',
-      primaryTextColor: '#e6edf3',
-      primaryBorderColor: '#58a6ff',
-      lineColor: '#58a6ff',
-      secondaryColor: '#1f2937',
-      tertiaryColor: '#2d1f47',
-      edgeLabelBackground: '#161b22',
-      clusterBkg: '#161b22',
-      clusterBorder: '#30363d',
-      titleColor: '#e6edf3',
-      nodeBorder: '#30363d',
-      mainBkg: '#1f2937',
+      background: '#07111f',
+      primaryColor: '#132038',
+      primaryTextColor: '#dde6f0',
+      primaryBorderColor: '#1e3456',
+      lineColor: '#00d4aa',
+      secondaryColor: '#0d1a2e',
+      tertiaryColor: '#192845',
+      edgeLabelBackground: '#0d1a2e',
+      clusterBkg: '#0d1a2e',
+      clusterBorder: '#1e3456',
+      titleColor: '#dde6f0',
+      nodeBorder: '#1e3456',
+      mainBkg: '#132038',
+      fontSize: '14px',
     },
     flowchart: { curve: 'basis', padding: 20 },
     sequence: {
-      actorMargin: 50,
-      messageMargin: 40,
-      boxMargin: 10,
-      noteMargin: 10,
-      messageAlign: 'center',
+      actorMargin: 50, messageMargin: 40,
+      boxMargin: 10, noteMargin: 10, messageAlign: 'center',
     },
+  });
+
+  /* ── Scroll Reveal ── */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* Hero stats already visible on load */
+  document.querySelectorAll('#hero .reveal').forEach(el => {
+    setTimeout(() => el.classList.add('visible'), 200);
   });
 </script>
 </body>
