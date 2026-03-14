@@ -45,6 +45,50 @@
       --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
     }
 
+    /* ─── LIGHT THEME ────────────────────────────────────────────────── */
+    [data-theme="light"] {
+      --ink:          #fafbfc;
+      --ink-2:        #f4f6f8;
+      --ink-3:        #e9ecef;
+      --ink-4:        #dfe3e8;
+      --rule:         #d0d7de;
+      --text:         #1f2937;
+      --muted:        #57606a;
+      --dim:          #818a94;
+
+      --teal-dim:     rgba(0,212,170,.15);
+      --teal-border:  rgba(0,212,170,.3);
+      --teal-glow:    0 0 12px rgba(0,212,170,.2);
+
+      --gold-dim:     rgba(232,160,32,.15);
+      --gold-border:  rgba(232,160,32,.35);
+
+      --indigo-dim:   rgba(129,140,248,.15);
+      --indigo-border:rgba(129,140,248,.35);
+
+      --crimson-dim:  rgba(224,82,82,.12);
+      --crimson-border:rgba(224,82,82,.3);
+
+      --green-dim:    rgba(52,211,153,.15);
+    }
+    [data-theme="light"] nav {
+      background: rgba(250,251,252,.88);
+    }
+    [data-theme="light"] #hero {
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -5%, rgba(0,212,170,.1) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 40% at 85% 80%, rgba(129,140,248,.08) 0%, transparent 60%),
+        var(--ink);
+    }
+    [data-theme="light"] h1,
+    [data-theme="light"] h2 { color: #000; }
+    [data-theme="light"] section:not(#hero):not(#summary) .section-header::before {
+      opacity: 0.06;
+    }
+    [data-theme="light"] .diagram-wrap {
+      background: rgba(0,0,0,.04);
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
 
@@ -56,6 +100,7 @@
       font-size: 16px;
       font-weight: 400;
       -webkit-font-smoothing: antialiased;
+      transition: background-color .4s ease, color .4s ease;
     }
 
     /* ─── SCROLL REVEAL ──────────────────────────────────────────────── */
@@ -109,6 +154,43 @@
       animation: livepulse 2.5s ease infinite;
     }
     @keyframes livepulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(0.7)} }
+
+    /* ─── THEME TOGGLE ───────────────────────────────────────────────── */
+    .theme-toggle {
+      margin-left: 1rem; flex-shrink: 0;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .theme-toggle-label {
+      font-family: var(--font-mono); font-size: 0.65rem;
+      color: var(--muted); text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 38px; height: 20px;
+      background: var(--ink-4);
+      border: 1px solid var(--rule);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all .3s ease;
+    }
+    .toggle-switch::before {
+      content: '';
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 14px; height: 14px;
+      background: var(--muted);
+      border-radius: 50%;
+      transition: all .3s ease;
+    }
+    .toggle-switch:hover { border-color: var(--teal); }
+    [data-theme="light"] .toggle-switch {
+      background: var(--ink-2);
+    }
+    [data-theme="light"] .toggle-switch::before {
+      transform: translateX(18px);
+      background: var(--teal);
+    }
 
     /* ─── LAYOUT ─────────────────────────────────────────────────────── */
     .container { max-width: 1080px; margin: 0 auto; padding: 0 2.5rem; }
@@ -542,6 +624,10 @@
   <div class="nav-live">
     <span class="live-dot"></span>
     tracuuhs.com
+  </div>
+  <div class="theme-toggle">
+    <span class="theme-toggle-label">Light</span>
+    <div class="toggle-switch" id="themeToggle" role="button" tabindex="0" aria-label="Toggle theme"></div>
   </div>
 </nav>
 
@@ -1543,6 +1629,69 @@ flowchart LR
   /* Hero stats already visible on load */
   document.querySelectorAll('#hero .reveal').forEach(el => {
     setTimeout(() => el.classList.add('visible'), 200);
+  });
+
+  /* ── Theme Toggle ── */
+  const themeToggle = document.getElementById('themeToggle');
+  const html = document.documentElement;
+
+  // Load saved theme or default to dark
+  const savedTheme = localStorage.getItem('hstc-theme') || 'dark';
+  html.setAttribute('data-theme', savedTheme);
+
+  // Toggle theme
+  function toggleTheme() {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('hstc-theme', newTheme);
+
+    // Update Mermaid theme
+    if (newTheme === 'light') {
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'default',
+        themeVariables: {
+          background: '#fafbfc',
+          primaryColor: '#e9ecef',
+          primaryTextColor: '#1f2937',
+          primaryBorderColor: '#d0d7de',
+          lineColor: '#00d4aa',
+          secondaryColor: '#f4f6f8',
+          tertiaryColor: '#dfe3e8',
+        },
+      });
+    } else {
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'dark',
+        themeVariables: {
+          darkMode: true,
+          background: '#07111f',
+          primaryColor: '#132038',
+          primaryTextColor: '#dde6f0',
+          primaryBorderColor: '#1e3456',
+          lineColor: '#00d4aa',
+          secondaryColor: '#0d1a2e',
+          tertiaryColor: '#192845',
+        },
+      });
+    }
+    // Re-render diagrams
+    document.querySelectorAll('.mermaid').forEach(el => {
+      const code = el.textContent;
+      el.removeAttribute('data-processed');
+      el.innerHTML = code;
+    });
+    mermaid.run();
+  }
+
+  themeToggle.addEventListener('click', toggleTheme);
+  themeToggle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleTheme();
+    }
   });
 </script>
 </body>
