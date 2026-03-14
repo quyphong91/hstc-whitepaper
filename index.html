@@ -731,35 +731,35 @@
     </div>
 
     <div class="diagram-wrap reveal">
-      <div class="diagram-label">Fig 01 — Platform Architecture Overview</div>
+      <div class="diagram-label">Fig 01 - Platform Architecture Overview</div>
       <div class="mermaid">
 flowchart TB
-    U([👤 User — Customs Officer / Trade Compliance Team]) --> S
+    U([User - Customs Officer / Trade Compliance Team]) --> S
 
-    subgraph S[" HSTC Platform — tracuuhs.com "]
+    subgraph S[" HSTC Platform - tracuuhs.com "]
         direction TB
-        IN[Search Input\nProduct name · Material · Function] --> L1
-        L1[⚡ Layer 1: Keyword Search\nBM25 algorithm · &lt;100ms] --> L2
-        L2[🧠 Layer 2: Semantic Search\nAI embeddings · meaning-based] --> L3
-        L3[🤖 Layer 3: AI Classification\nGPT analysis · cited reasoning]
+        IN[Search Input - Product name, Material, Function] --> L1
+        L1[Layer 1: Keyword Search - BM25 algorithm, under 100ms] --> L2
+        L2[Layer 2: Semantic Search - AI embeddings, meaning-based] --> L3
+        L3[Layer 3: AI Classification - GPT analysis, cited reasoning]
     end
 
     S --> OUT
 
     subgraph OUT[" Search Results "]
         direction LR
-        R1[📦 Matching HS Codes\n4-digit → 8-digit]
-        R2[📖 Legal Evidence\nExplanatory Notes\nSnippets]
-        R3[⚖️ Customs Rulings\nOfficial CHQ decisions]
-        R4[🎯 AI Recommendation\nRanked with confidence]
+        R1[Matching HS Codes - 4-digit to 8-digit]
+        R2[Legal Evidence - Explanatory Notes Snippets]
+        R3[Customs Rulings - Official CHQ decisions]
+        R4[AI Recommendation - Ranked with confidence]
     end
 
     subgraph DB[" Legal Knowledge Base "]
         direction LR
-        D1[🗂️ Tariff Schedule\n8-digit codes]
-        D2[📘 WCO Expl. Notes\nEN — bilingual]
-        D3[📗 Vietnam SEN\nSupplementary notes]
-        D4[📕 CHQ Rulings\nOfficial decisions]
+        D1[Tariff Schedule - 8-digit codes]
+        D2[WCO Expl. Notes - EN bilingual]
+        D3[Vietnam SEN - Supplementary notes]
+        D4[CHQ Rulings - Official decisions]
     end
 
     S -.->|indexes| DB
@@ -916,7 +916,7 @@ flowchart TB
 
     <h3 style="margin-bottom:1.5rem" class="reveal">AI Classification — How It Works</h3>
     <div class="diagram-wrap reveal">
-      <div class="diagram-label">Fig 02 — AI Classification Sequence</div>
+      <div class="diagram-label">Fig 02 - AI Classification Sequence</div>
       <div class="mermaid">
 sequenceDiagram
     participant U as 👤 User
@@ -1007,7 +1007,7 @@ sequenceDiagram
     </div>
 
     <div class="diagram-wrap reveal" style="overflow-x:auto">
-      <div class="diagram-label">Fig 03 — Classification Decision Flow</div>
+      <div class="diagram-label">Fig 03 - Classification Decision Flow</div>
       <div class="mermaid" style="min-width:600px">
 %%{init: {'theme':'dark','themeVariables':{'fontSize':'16px','fontFamily':'system-ui,sans-serif'},'flowchart':{'nodeSpacing':50,'rankSpacing':60,'curve':'basis'}}}%%
 flowchart TD
@@ -1090,7 +1090,7 @@ flowchart TD
     </div>
 
     <div class="diagram-wrap reveal" style="margin-bottom:2.5rem">
-      <div class="diagram-label">Fig 04 — Before vs. After Process Comparison</div>
+      <div class="diagram-label">Fig 04 - Before vs. After Process Comparison</div>
       <div class="mermaid">
 flowchart LR
     subgraph BEFORE["❌ Without HSTC — Manual Process"]
@@ -1279,7 +1279,7 @@ flowchart LR
     </div>
 
     <div class="diagram-wrap reveal">
-      <div class="diagram-label">Fig 05 — Platform Growth Architecture</div>
+      <div class="diagram-label">Fig 05 - Platform Growth Architecture</div>
       <div class="mermaid">
 flowchart TB
     subgraph CORE["🏢 Core Platform (Today)"]
@@ -1356,7 +1356,7 @@ flowchart TB
     </div>
 
     <div class="diagram-wrap reveal">
-      <div class="diagram-label">Fig 06 — Infrastructure Architecture</div>
+      <div class="diagram-label">Fig 06 - Infrastructure Architecture</div>
       <div class="mermaid">
 flowchart LR
     subgraph CDN["🌐 Content Delivery (Global CDN)"]
