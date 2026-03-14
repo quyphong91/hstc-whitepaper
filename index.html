@@ -1586,33 +1586,60 @@ flowchart LR
 </footer>
 
 <script>
+  /* ── Initialize Theme First ── */
+  const savedTheme = localStorage.getItem('hstc-theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+
   /* ── Mermaid ── */
-  mermaid.initialize({
-    startOnLoad: true,
-    theme: 'dark',
-    themeVariables: {
-      darkMode: true,
-      background: '#07111f',
-      primaryColor: '#132038',
-      primaryTextColor: '#dde6f0',
-      primaryBorderColor: '#1e3456',
-      lineColor: '#00d4aa',
-      secondaryColor: '#0d1a2e',
-      tertiaryColor: '#192845',
-      edgeLabelBackground: '#0d1a2e',
-      clusterBkg: '#0d1a2e',
-      clusterBorder: '#1e3456',
-      titleColor: '#dde6f0',
-      nodeBorder: '#1e3456',
-      mainBkg: '#132038',
-      fontSize: '14px',
+  const mermaidConfig = {
+    dark: {
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        background: '#07111f',
+        primaryColor: '#132038',
+        primaryTextColor: '#dde6f0',
+        primaryBorderColor: '#1e3456',
+        lineColor: '#00d4aa',
+        secondaryColor: '#0d1a2e',
+        tertiaryColor: '#192845',
+        edgeLabelBackground: '#0d1a2e',
+        clusterBkg: '#0d1a2e',
+        clusterBorder: '#1e3456',
+        titleColor: '#dde6f0',
+        nodeBorder: '#1e3456',
+        mainBkg: '#132038',
+        fontSize: '14px',
+      },
+      flowchart: { curve: 'basis', padding: 20 },
+      sequence: { actorMargin: 50, messageMargin: 40, boxMargin: 10, noteMargin: 10, messageAlign: 'center' },
     },
-    flowchart: { curve: 'basis', padding: 20 },
-    sequence: {
-      actorMargin: 50, messageMargin: 40,
-      boxMargin: 10, noteMargin: 10, messageAlign: 'center',
-    },
-  });
+    light: {
+      startOnLoad: true,
+      theme: 'default',
+      themeVariables: {
+        background: '#fafbfc',
+        primaryColor: '#e9ecef',
+        primaryTextColor: '#1f2937',
+        primaryBorderColor: '#d0d7de',
+        lineColor: '#00d4aa',
+        secondaryColor: '#f4f6f8',
+        tertiaryColor: '#dfe3e8',
+        edgeLabelBackground: '#f4f6f8',
+        clusterBkg: '#f4f6f8',
+        clusterBorder: '#d0d7de',
+        titleColor: '#1f2937',
+        nodeBorder: '#d0d7de',
+        mainBkg: '#e9ecef',
+        fontSize: '14px',
+      },
+      flowchart: { curve: 'basis', padding: 20 },
+      sequence: { actorMargin: 50, messageMargin: 40, boxMargin: 10, noteMargin: 10, messageAlign: 'center' },
+    }
+  };
+
+  mermaid.initialize(mermaidConfig[savedTheme]);
 
   /* ── Scroll Reveal ── */
   const observer = new IntersectionObserver(entries => {
@@ -1633,56 +1660,32 @@ flowchart LR
 
   /* ── Theme Toggle ── */
   const themeToggle = document.getElementById('themeToggle');
-  const html = document.documentElement;
 
-  // Load saved theme or default to dark
-  const savedTheme = localStorage.getItem('hstc-theme') || 'dark';
-  html.setAttribute('data-theme', savedTheme);
+  // Store original Mermaid source code before rendering
+  const mermaidSources = new Map();
+  document.querySelectorAll('.mermaid').forEach((el, idx) => {
+    mermaidSources.set(idx, el.textContent.trim());
+  });
 
   // Toggle theme
   function toggleTheme() {
-    const currentTheme = html.getAttribute('data-theme');
+    const currentTheme = document.documentElement.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('hstc-theme', newTheme);
 
-    // Update Mermaid theme
-    if (newTheme === 'light') {
-      mermaid.initialize({
-        startOnLoad: false,
-        theme: 'default',
-        themeVariables: {
-          background: '#fafbfc',
-          primaryColor: '#e9ecef',
-          primaryTextColor: '#1f2937',
-          primaryBorderColor: '#d0d7de',
-          lineColor: '#00d4aa',
-          secondaryColor: '#f4f6f8',
-          tertiaryColor: '#dfe3e8',
-        },
-      });
-    } else {
-      mermaid.initialize({
-        startOnLoad: false,
-        theme: 'dark',
-        themeVariables: {
-          darkMode: true,
-          background: '#07111f',
-          primaryColor: '#132038',
-          primaryTextColor: '#dde6f0',
-          primaryBorderColor: '#1e3456',
-          lineColor: '#00d4aa',
-          secondaryColor: '#0d1a2e',
-          tertiaryColor: '#192845',
-        },
-      });
-    }
-    // Re-render diagrams
-    document.querySelectorAll('.mermaid').forEach(el => {
-      const code = el.textContent;
-      el.removeAttribute('data-processed');
-      el.innerHTML = code;
+    // Re-render diagrams with new theme
+    document.querySelectorAll('.mermaid').forEach((el, idx) => {
+      const originalCode = mermaidSources.get(idx);
+      if (originalCode) {
+        el.removeAttribute('data-processed');
+        el.innerHTML = originalCode;
+      }
     });
+
+    // Re-initialize Mermaid with new theme config
+    const config = { ...mermaidConfig[newTheme], startOnLoad: false };
+    mermaid.initialize(config);
     mermaid.run();
   }
 
