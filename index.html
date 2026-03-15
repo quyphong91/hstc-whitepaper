@@ -936,7 +936,6 @@ sequenceDiagram
     DB-->>EF: 10 most relevant Explanatory Note excerpts
     EF->>GPT: Classify product with retrieved legal context
     GPT-->>EF: Ranked HS codes + citations + reasoning (Vietnamese)
-    EF->>DB: Log query for analytics
     EF-->>FE: Structured classification result
     FE-->>U: 📊 Formatted analysis with headed table
       </div>
