@@ -984,9 +984,9 @@ sequenceDiagram
         <p style="font-size:.85rem;margin-top:.35rem">Interactive guide to the General Rules for Interpretation (GRI) — the six rules that govern how every classification decision must be made. Essential reference for proper classification methodology.</p>
       </div>
       <div class="card" style="padding:1.5rem">
-        <span class="ftag ftag-indigo">Enterprise</span>
+        <span class="ftag ftag-teal">Live</span>
         <h3>Search API</h3>
-        <p style="font-size:.85rem;margin-top:.35rem">A standalone BM25 search API (hstc-api) that powers the AI pipeline and is available for integration with external systems — ERP platforms, customs declaration software, and procurement tools.</p>
+        <p style="font-size:.85rem;margin-top:.35rem">A standalone, open-source BM25 search API (<a href="https://github.com/quyphong91/hstc-api" style="color:var(--teal)">hstc-api</a>) publicly available at api.tracuuhs.com/v1. Bilingual VI/EN search across EN and SEN notes, tiered rate limits (1,000 req/hr public · 5,000 req/hr with a free API key), and no request logging — privacy-friendly by design.</p>
       </div>
       <div class="card" style="padding:1.5rem">
         <span class="ftag ftag-gold">Content</span>
@@ -1240,8 +1240,9 @@ flowchart LR
     <div class="card-grid card-grid-2 card-grid-sep reveal" style="margin-bottom:2.5rem">
       <div class="card card-teal" style="padding:1.5rem">
         <h3>Search API for System Integration</h3>
-        <p style="font-size:.85rem;margin-top:.4rem">The standalone BM25 search API (hstc-api) can be integrated with clients' ERP systems, warehouse management systems, and customs declaration software. This enables automated HS code suggestion at the point of product data entry.</p>
+        <p style="font-size:.85rem;margin-top:.4rem">The open-source BM25 search API (hstc-api) is already live and publicly available — ready to integrate with ERP systems, warehouse management software, and customs declaration platforms for automated HS code suggestions at the point of data entry. No request logging; privacy-friendly.</p>
         <div class="pill-row">
+          <span class="pill pill-teal">Live Today</span>
           <span class="pill pill-teal">REST API</span>
           <span class="pill pill-teal">ERP Integration</span>
           <span class="pill">Customs Software</span>
@@ -1340,7 +1341,7 @@ flowchart TB
       </div>
       <div class="card" style="padding:1.4rem">
         <h4 style="color:var(--green);margin-bottom:.4rem">API-First Architecture</h4>
-        <p style="font-size:.84rem">Standalone search API already exists and is used internally. Expanding access to enterprise clients or integrating with third-party systems requires configuration, not new engineering.</p>
+        <p style="font-size:.84rem">Standalone search API is live and publicly available (api.tracuuhs.com/v1) with tiered rate limits and optional free API keys. No request logging — zero analytics overhead. Expanding to enterprise SLAs or ERP connectors requires configuration, not new engineering.</p>
       </div>
     </div>
   </div>
@@ -1471,6 +1472,7 @@ flowchart LR
             <div class="ritem">Semantic search with OpenAI embeddings (9,737 chunks)</div>
             <div class="ritem">AI usage analytics dashboard</div>
             <div class="ritem">GRI Rules interactive guide</div>
+            <div class="ritem">Open-source Search API (hstc-api) — public REST API, tiered rate limits, optional free API key, no request logging</div>
           </div>
         </div>
       </div>
@@ -1497,7 +1499,7 @@ flowchart LR
           <h3>API Products &amp; Consulting Platform</h3>
           <p style="font-size:.85rem;margin-top:.35rem;color:var(--muted)">Expanding to enterprise clients and customs consulting services with API access, multi-tenancy, and service integration capabilities.</p>
           <div style="margin-top:.75rem">
-            <div class="ritem">Public Search API with tiered rate limits and API keys</div>
+            <div class="ritem">Enterprise Search API tier — SLA guarantees, dedicated endpoints, usage dashboards</div>
             <div class="ritem">Multi-tenant organizational accounts for consulting firms</div>
             <div class="ritem">ERP/WMS connectors (SAP, Oracle, custom integrations)</div>
             <div class="ritem">Classification batch processing (CSV upload → bulk classify)</div>
